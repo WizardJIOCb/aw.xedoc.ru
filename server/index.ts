@@ -3,7 +3,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { createServer as httpServer, type IncomingMessage } from "node:http";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import bcrypt from "bcryptjs";
@@ -459,15 +459,19 @@ export async function buildServer(
   return { app, server, game, store, state, close, tick };
 }
 
+// argv retains /current while the module URL resolves to the real release path.
+// Comparing canonical filesystem paths keeps the production entrypoint alive.
 if (
   process.argv[1] &&
-  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
 ) {
   const running = await buildServer();
   const port = Number(process.env.PORT ?? 3188);
   const host = process.env.HOST ?? "127.0.0.1";
   running.server.listen(port, host, () => {
-    console.log(`AW world listening on http://${host}:${port}`);
+    const address = running.server.address();
+    const listeningPort = address && typeof address === "object" ? address.port : port;
+    console.log(`AW world listening on http://${host}:${listeningPort}`);
   });
   let stopping = false;
   for (const signal of ["SIGINT", "SIGTERM"] as const)

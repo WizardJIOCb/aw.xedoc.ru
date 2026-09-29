@@ -720,12 +720,12 @@ export class PlanetScene {
         0,
       );
     }
-    g.rotation.z = Math.PI;
+    g.rotation.z = 0;
     g.position.set(0, 0.05, 0.02);
     a.hand.add(g);
     a.weapon = g;
   }
-  avatar(id: string, x: number, z: number) {
+  avatar(id: string, x: number, z: number, rotation = 0) {
     const root = new THREE.Group();
     root.position.set(x, 0, z);
     const a: Avatar = {
@@ -733,7 +733,7 @@ export class PlanetScene {
       actions: {},
       current: "",
       target: new THREE.Vector3(x, 0, z),
-      rotation: 0,
+      rotation,
     };
     if (this.model) this.installModel(a, this.model, this.clips);
     else root.add(this.fallback());
@@ -748,7 +748,7 @@ export class PlanetScene {
       this.yaw = 0.5;
       this.ready = true;
     }
-    const a = this.avatars.get(self.id) || this.avatar(self.id, self.x, self.z);
+    const a = this.avatars.get(self.id) || this.avatar(self.id, self.x, self.z, self.rotation);
     if (this.player.distanceTo(new THREE.Vector3(self.x, 0, self.z)) > 3)
       this.player.set(self.x, 0, self.z);
     a.target.copy(this.player);

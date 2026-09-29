@@ -1,8 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { WebSocket } from "ws";
 import type { WorldData } from "../src/shared/types.js";
@@ -576,4 +578,47 @@ test("shipped world is playable: starter sword, chicken loot and cooking use rea
   at += 6000;
   game.tick();
   assert.equal(player.inventory.bronze_bar, 1);
+});
+
+test("production entrypoint starts through a current-directory symlink and serves health", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "aw-current-"));
+  const project = fileURLToPath(new URL("..", import.meta.url));
+  const current = join(directory, "current");
+  // Windows directory junctions need no elevation; Unix ignores the type argument.
+  await symlink(project, current, "junction");
+  const child = spawn(process.execPath, ["--import", "tsx", join(current, "server", "index.ts")], {
+    cwd: project,
+    env: { ...process.env, HOST: "127.0.0.1", PORT: "0", NODE_ENV: "test", SOURCE_COMMIT: "symlink-regression-test", STATE_FILE: join(directory, "state.json") },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let output = "";
+  let errors = "";
+  child.stdout.on("data", data => { output += data.toString(); });
+  child.stderr.on("data", data => { errors += data.toString(); });
+  try {
+    const origin = await new Promise<string>((done, reject) => {
+      const timeout = setTimeout(() => reject(new Error(`Symlink entrypoint did not listen: ${output}\n${errors}`)), 8000);
+      const complete = (error?: Error, url?: string) => { clearTimeout(timeout); error ? reject(error) : done(url!); };
+      child.once("error", error => complete(error));
+      child.once("exit", code => complete(new Error(`Symlink entrypoint exited before listening (${code}): ${errors}`)));
+      child.stdout.on("data", () => {
+        const match = output.match(/AW world listening on (http:\/\/127\.0\.0\.1:\d+)/);
+        if (match) complete(undefined, match[1]);
+      });
+    });
+    const response = await fetch(`${origin}/api/health`);
+    assert.equal(response.status, 200);
+    const health = await response.json();
+    assert.equal(health.ok, true);
+    assert.equal(health.sourceCommit, "symlink-regression-test");
+    assert.ok(health.items > 0);
+  } finally {
+    if (child.exitCode === null) {
+      const exited = once(child, "exit");
+      child.kill("SIGTERM");
+      await exited;
+    }
+    assert.ok(directory.startsWith(join(tmpdir(), "aw-current-")));
+    await rm(directory, { recursive: true, force: true });
+  }
 });

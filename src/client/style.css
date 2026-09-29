@@ -968,6 +968,59 @@ kbd {
   width: 100%;
   display: block;
 }
+.admin-teleport {
+  padding: 16px;
+  margin-bottom: 18px;
+  border: 1px solid #abc88255;
+  border-radius: 8px;
+  background: #344c332b;
+}
+.admin-teleport-heading,
+.admin-teleport form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-teleport-heading {
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.admin-teleport button {
+  font-size: 11px;
+}
+.admin-teleport button.selected {
+  color: var(--acid);
+  border-color: var(--acid);
+  background: #adc8821c;
+}
+.admin-teleport form label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex: 1 1 120px;
+}
+.admin-teleport input {
+  min-width: 0;
+  width: 100%;
+  max-width: 150px;
+  padding: 9px 10px;
+  margin: 0;
+}
+.admin-teleport p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #b8c9ae;
+  margin: 12px 0 0;
+}
+.big-map.teleport-mode {
+  border-color: var(--acid);
+}
+.big-map.teleport-mode canvas {
+  cursor: crosshair;
+}
 .map-legend {
   display: flex;
   gap: 22px;

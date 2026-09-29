@@ -1,4 +1,6 @@
 export type Position = { x: number; z: number };
+export type PlayerRole = "player" | "admin";
+export type TeleportMessage = { type: "teleport"; x: number; z: number };
 export type ItemDef = {
   id: string;
   name: string;
@@ -25,6 +27,7 @@ export type RecipeDef = {
 export type Player = {
   id: string;
   name: string;
+  role: PlayerRole;
   x: number;
   z: number;
   rotation: number;

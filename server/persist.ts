@@ -1,12 +1,13 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { Entity, Player } from "../src/shared/types.js";
+import type { Entity, Player, PlayerRole } from "../src/shared/types.js";
 
 export type Account = {
   id: string;
   name: string;
   passwordHash: string;
   createdAt: number;
+  role?: PlayerRole;
 };
 export type Session = { playerId: string; expiresAt: number };
 export type Bag = {

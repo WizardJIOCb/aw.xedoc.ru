@@ -38,6 +38,9 @@ let reconnectTimer: ReturnType<typeof setTimeout> | undefined,
   loggingOut = false,
   lastChat = "",
   lastPanelState = "";
+let mapTeleportMode = false,
+  teleportPending = false,
+  teleportTimer: ReturnType<typeof setTimeout> | undefined;
 const app = $("#app");
 app.innerHTML = `
 <div id="world"></div><div class="vignette"></div>
@@ -188,6 +191,38 @@ function action(action: string, extra: Record<string, unknown> = {}) {
   if (!self) return;
   send({ type: "action", action, ...extra });
 }
+function finishTeleportRequest() {
+  teleportPending = false;
+  if (teleportTimer) clearTimeout(teleportTimer);
+  teleportTimer = undefined;
+  scene.focused = !!self && !panel && !dialogue.isOpen;
+}
+function requestTeleport(x: number, z: number) {
+  if (self?.role !== "admin") return;
+  const min = -canonicalMap.layout.origin,
+    max = canonicalMap.layout.width - canonicalMap.layout.origin;
+  if (!Number.isFinite(x) || !Number.isFinite(z) || x < min || x >= max || z < min || z >= max) {
+    toast(`Координаты должны быть числами от ${min} до ${max}, не включая ${max}.`, "error");
+    return;
+  }
+  if (teleportPending) return;
+  if (ws?.readyState !== WebSocket.OPEN) {
+    toast("Связь с колонией восстанавливается.");
+    return;
+  }
+  dialogue.close();
+  scene.destination = undefined;
+  scene.keys.clear();
+  target = undefined;
+  teleportPending = true;
+  scene.focused = false;
+  // Movement stays at the last confirmed position until the server acknowledges.
+  teleportTimer = setTimeout(() => {
+    finishTeleportRequest();
+    toast("Подтверждение телепорта не пришло. Проверь соединение и повтори.", "error");
+  }, 8000);
+  ws.send(JSON.stringify({ type: "adminTeleport", x, z }));
+}
 function connect() {
   if (!self || loggingOut || connecting || ws?.readyState === WebSocket.OPEN) return;
   connecting = true;
@@ -208,11 +243,20 @@ function connect() {
       return;
     }
     if (data.type === "snapshot") snapshot(data);
-    else if (data.type === "notice" && !dialogue.notice(data.text, data.kind))
-      toast(data.text, data.kind);
+    else if (data.type === "teleport" && self && Number.isFinite(data.x) && Number.isFinite(data.z)) {
+      dialogue.close();
+      target = undefined;
+      scene.confirmTeleport(data.x, data.z);
+      finishTeleportRequest();
+      if (panel === "map") drawMap($("#world-map"), true);
+    } else if (data.type === "notice") {
+      if (teleportPending && data.kind === "error") finishTeleportRequest();
+      if (!dialogue.notice(data.text, data.kind)) toast(data.text, data.kind);
+    }
   };
   ws.onclose = async () => {
     if (ws !== socket) return;
+    finishTeleportRequest();
     connecting = false;
     if (!self || loggingOut) return;
     $("#connection").textContent = "ВОССТАНАВЛИВАЕМ СВЯЗЬ";
@@ -258,8 +302,13 @@ function connect() {
   };
 }
 function snapshot(s: Snapshot) {
+  const roleChanged = self?.role !== s.self.role;
   self = s.self;
-  scene.focused = !panel && !dialogue.isOpen;
+  if (s.self.role !== "admin") {
+    mapTeleportMode = false;
+    if (teleportPending) finishTeleportRequest();
+  }
+  scene.focused = !teleportPending && !panel && !dialogue.isOpen;
   others = s.players;
   scene.updatePlayers(s.self, s.players);
   scene.updateEntities(s.entities);
@@ -313,8 +362,9 @@ function snapshot(s: Snapshot) {
     Math.floor(s.self.force),
     s.self.credits,
     s.self.clan,
+    s.self.role,
   ]);
-  if (panel && changed !== lastPanelState && !scene.typing()) {
+  if (panel && changed !== lastPanelState && (!scene.typing() || (panel === "map" && roleChanged))) {
     lastPanelState = changed;
     renderPanel();
   }
@@ -401,7 +451,9 @@ function heal() {
   if (food) action("use", { item: food });
   else toast("В инвентаре нет еды. Её можно приготовить или купить.");
 }
-scene.onMove = (x, z, rotation, running) => send({ type: "move", x, z, rotation, running });
+scene.onMove = (x, z, rotation, running) => {
+  if (!teleportPending) send({ type: "move", x, z, rotation, running });
+};
 scene.onEntityClick = interactEntity;
 scene.onNavigate = () => {
   if (self?.combatTarget) action("disengage");
@@ -465,6 +517,7 @@ $("#panel-backdrop").addEventListener("click", (e) => {
 });
 function openPanel(name: string) {
   dialogue.close();
+  mapTeleportMode = false;
   lastPanelState = "";
   panel = name;
   scene.destination = undefined;
@@ -475,7 +528,8 @@ function openPanel(name: string) {
 }
 function closePanel() {
   panel = "";
-  scene.focused = !!self;
+  mapTeleportMode = false;
+  scene.focused = !!self && !teleportPending;
   $("#panel-backdrop").hidden = true;
 }
 function inventoryRows(
@@ -570,12 +624,46 @@ function renderPanel() {
         "",
       )}</div><h3 class="section-title">Форс · ${Math.floor(self.force)} / ${self.maxForce ?? 100}</h3><div class="mode-options force-options">${["Выключен", "Регенерация", "Точность", "Реакция", "Защита", "Шок", "Берсерк", "Оборона", "Нападение", "Форс-защита"].map((name, n) => `<button data-force="${n}" class="${(self!.quest.forceMode || 0) === n ? "selected" : ""}">${name}</button>`).join("")}</div><h3 class="section-title">Профессии и боевые навыки</h3><div class="skill-grid">${world.professions.map((s) => `<div class="skill"><div><strong>${esc(s.name)}</strong><span>${self!.skills[s.id] || 1}</span></div><p>${esc(s.description)}</p><small>${skillProgress(s.id).label}</small><div class="skill-track"><i style="width:${skillProgress(s.id).percent}%"></i></div></div>`).join("")}</div>`;
   } else if (panel === "map") {
-    content.innerHTML = `<p class="panel-intro">Мир AWPlanet: полная сетка 512 × 512. Отметки показывают жителей, мастерские, ресурсы и противников. Щёлкни по карте, чтобы проложить маршрут.</p><div class="big-map"><canvas id="world-map" width="660" height="430"></canvas></div><div class="map-legend"><span>◆ Жители и мастерские</span><span>● Ресурсы</span><span>▲ Противники</span><span>◎ Ты</span></div>`;
+    const admin = self?.role === "admin", limit = canonicalMap.layout.limit,
+      min = -canonicalMap.layout.origin, max = canonicalMap.layout.width - canonicalMap.layout.origin,
+      teleportHint = `Введи координаты от ${min} до ${max} (не включая ${max}) или включи выбор точки.`;
+    content.innerHTML = `<p class="panel-intro">Мир AWPlanet: полная сетка 512 × 512. Отметки показывают жителей, мастерские, ресурсы и противников. Щёлкни по карте, чтобы проложить маршрут.</p>${admin ? `<section class="admin-teleport" aria-label="Телепортация администратора"><div class="admin-teleport-heading"><strong>Телепортация администратора</strong><button type="button" id="map-teleport-mode" aria-pressed="${mapTeleportMode}" class="${mapTeleportMode ? "selected" : ""}">${mapTeleportMode ? "Выбор точки включён" : "Выбрать точку на карте"}</button></div><form id="admin-teleport-form"><label>X<input name="x" type="number" min="${min}" max="${max - 1e-10}" step="any" required value="${self!.x}"></label><label>Z<input name="z" type="number" min="${min}" max="${max - 1e-10}" step="any" required value="${self!.z}"></label><button type="submit">Телепортироваться</button></form><p id="map-teleport-hint">${mapTeleportMode ? "Нажми внутри карты, чтобы сразу телепортироваться в выбранную клетку." : teleportHint}</p></section>` : ""}<div class="big-map ${admin && mapTeleportMode ? "teleport-mode" : ""}"><canvas id="world-map" width="660" height="430" aria-label="Полная карта AWPlanet"></canvas></div><div class="map-legend"><span>◆ Жители и мастерские</span><span>● Ресурсы</span><span>▲ Противники</span><span>◎ Ты</span></div>`;
     drawMap($("#world-map"), true);
+    if (admin) {
+      $("#admin-teleport-form").onsubmit = (event) => {
+        event.preventDefault();
+        const form = event.currentTarget as HTMLFormElement;
+        const x = form.elements.namedItem("x") as HTMLInputElement,
+          z = form.elements.namedItem("z") as HTMLInputElement;
+        requestTeleport(x.valueAsNumber, z.valueAsNumber);
+      };
+      $("#map-teleport-mode").onclick = () => {
+        mapTeleportMode = !mapTeleportMode;
+        const button = $("#map-teleport-mode");
+        button.setAttribute("aria-pressed", String(mapTeleportMode));
+        button.classList.toggle("selected", mapTeleportMode);
+        button.textContent = mapTeleportMode ? "Выбор точки включён" : "Выбрать точку на карте";
+        $(".big-map").classList.toggle("teleport-mode", mapTeleportMode);
+        $("#map-teleport-hint").textContent = mapTeleportMode
+          ? "Нажми внутри карты, чтобы сразу телепортироваться в выбранную клетку."
+          : teleportHint;
+      };
+    }
     $("#world-map").onclick = (event) => {
       const canvas = $<HTMLCanvasElement>("#world-map"), rect = canvas.getBoundingClientRect(), scale = Math.min(canvas.width, canvas.height) / 540;
       const x = ((event.clientX - rect.left) / rect.width * canvas.width - canvas.width / 2) / scale;
       const z = ((event.clientY - rect.top) / rect.height * canvas.height - canvas.height / 2) / scale;
+      // The canvas includes margins around the actual square world.
+      if (x < min || x >= max || z < min || z >= max) return;
+      if (self?.role === "admin" && mapTeleportMode) {
+        const cellX = Math.floor(x + canonicalMap.layout.origin) - canonicalMap.layout.origin + .5,
+          cellZ = Math.floor(z + canonicalMap.layout.origin) - canonicalMap.layout.origin + .5;
+        $<HTMLInputElement>('#admin-teleport-form input[name="x"]').value = String(cellX);
+        $<HTMLInputElement>('#admin-teleport-form input[name="z"]').value = String(cellZ);
+        requestTeleport(cellX, cellZ);
+        return;
+      }
+      if (Math.abs(x) > limit || Math.abs(z) > limit) return;
       closePanel(); scene.moveTo(x, z);
     };
   } else if (panel === "bank") {
@@ -799,6 +887,7 @@ setInterval(() => {
   $("#zone").textContent = safe ? "КОЛОНИЯ" : "МИР AWPLANET";
   $(".tiny").textContent = safe ? "БЕЗОПАСНАЯ ЗОНА" : "ДИКАЯ МЕСТНОСТЬ";
   drawMap($("#minimap"));
+  if (panel === "map") drawMap($("#world-map"), true);
 }, 200);
 $("#minimap").onclick = (e) => {
   if (!self) return;

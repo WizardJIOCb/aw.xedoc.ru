@@ -5,6 +5,7 @@ import type {
   Entity,
   ItemDef,
   Player,
+  PlayerRole,
   RecipeDef,
   Snapshot,
   WorldData,
@@ -117,6 +118,7 @@ export class Game {
       }
     }
     for (const player of Object.values(state.players)) {
+      player.role = this.role(player.id);
       player.online = false;
       player.quest ??= {};
       player.stats ??= {
@@ -138,7 +140,8 @@ export class Game {
       }
       player.level = levelForXp(player.xp);
       if (map) this.attributes(player);
-      if (map && !terrainWalkable(map, player.x, player.z)) Object.assign(player, map.spawn);
+      if (map && (!this.teleportCoordinatesValid(player.x, player.z) ||
+        (player.role !== "admin" && !terrainWalkable(map, player.x, player.z)))) Object.assign(player, map.spawn);
       this.pruneEquipment(player);
       player.action = state.jobs[player.id]
         ? `Изготовление: ${this.recipes.get(state.jobs[player.id].recipeId)?.name ?? state.jobs[player.id].recipeId}`
@@ -205,6 +208,7 @@ export class Game {
     const player: Player = {
       id,
       name,
+      role: this.role(id),
       x: this.map?.spawn.x ?? 0,
       z: this.map?.spawn.z ?? 8,
       rotation: Math.PI,
@@ -263,7 +267,45 @@ export class Game {
   player(id: string) {
     if (!own(this.state.players, id))
       throw new GameError("Персонаж не найден.");
-    return this.state.players[id];
+    const player = this.state.players[id];
+    // This public mirror never authorizes privileges. Only the saved account does.
+    player.role = this.role(id);
+    return player;
+  }
+
+  private role(id: string): PlayerRole {
+    return own(this.state.accounts, id) && this.state.accounts[id].role === "admin" ? "admin" : "player";
+  }
+
+  private teleportCoordinatesValid(x: unknown, z: unknown): boolean {
+    if (!number(x) || !number(z)) return false;
+    if (this.map) {
+      const minimum = -this.map.layout.origin;
+      return (x as number) >= minimum && (x as number) < this.map.layout.width - this.map.layout.origin &&
+        (z as number) >= minimum && (z as number) < this.map.layout.height - this.map.layout.origin;
+    }
+    return Math.abs(x as number) <= WORLD_LIMIT && Math.abs(z as number) <= WORLD_LIMIT;
+  }
+
+  adminTeleport(id: string, x: unknown, z: unknown) {
+    const player = this.player(id);
+    if (this.role(id) !== "admin") throw new GameError("Телепортация доступна только администраторам.");
+    if (!player.online) throw new GameError("Подключитесь к миру.");
+    if (!this.teleportCoordinatesValid(x, z)) throw new GameError(this.map
+      ? `Координаты должны быть числами от -${this.map.layout.origin} включительно до ${this.map.layout.width - this.map.layout.origin} исключительно.`
+      : `Координаты должны быть числами от -${WORLD_LIMIT} до ${WORLD_LIMIT}.`);
+    this.combatTargets.delete(id);
+    for (const [enemyId, aggro] of this.aggressors)
+      if (aggro.playerId === id) this.aggressors.delete(enemyId);
+    // A craft job retains its reserved inputs and finishes exactly once. Warping
+    // neither cancels the job nor grants health, stamina, XP or inventory.
+    if (!this.state.jobs[id]) player.action = undefined;
+    player.x = x as number;
+    player.z = z as number;
+    this.movementAt.set(id, this.now());
+    this.changed();
+    this.say(id, `Телепортация: ${player.x.toFixed(2)}, ${player.z.toFixed(2)}.`, "success");
+    return { x: player.x, z: player.z };
   }
 
   move(id: string, x: unknown, z: unknown, rotation: unknown, running = false) {
@@ -277,6 +319,13 @@ export class Game {
       0.25,
     );
     this.movementAt.set(id, at);
+    // A stationary reconciliation packet after an administrative edge warp must
+    // not silently drag its coordinate back into the ordinary walking bounds.
+    if (player.x === x && player.z === z) {
+      player.rotation = (rotation as number) % (Math.PI * 2);
+      this.changed();
+      return;
+    }
     const wanted = {
       x: clamp(x as number, -(this.map?.layout.limit ?? WORLD_LIMIT), this.map?.layout.limit ?? WORLD_LIMIT),
       z: clamp(z as number, -(this.map?.layout.limit ?? WORLD_LIMIT), this.map?.layout.limit ?? WORLD_LIMIT),

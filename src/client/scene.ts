@@ -311,6 +311,30 @@ export class PlanetScene {
     );
   }
   moveTo(x: number, z: number) { this.destination = { x, z }; }
+  confirmTeleport(x: number, z: number) {
+    // Called only for the server's teleport acknowledgement, never a map click.
+    this.clearNavigation();
+    this.keys.clear();
+    this.moving = false;
+    this.player.set(x, this.groundHeight(x, z), z);
+    const own = this.avatars.get(this.selfId);
+    if (own) {
+      own.target.copy(this.player);
+      own.root.position.copy(this.player);
+      this.animation(own, "idle");
+    }
+    const target = this.player.clone().add(new THREE.Vector3(0, .9, 0));
+    const offset = new THREE.Vector3(
+      Math.sin(this.yaw) * Math.cos(this.pitch),
+      Math.sin(this.pitch),
+      Math.cos(this.yaw) * Math.cos(this.pitch),
+    ).multiplyScalar(this.distance);
+    this.camera.position.copy(target).add(offset);
+    this.camera.lookAt(target);
+    this.canonicalWorld?.updateVisibility(x, z, this.quality === "low" ? 30 : this.quality === "medium" ? 42 : 54);
+    this.sendAt = performance.now();
+    this.renderer.domElement.dataset.routeState = "teleported";
+  }
   private clearNavigation() {
     this.route = [];
     this.destinationPoint = undefined;

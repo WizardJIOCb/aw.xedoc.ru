@@ -12,6 +12,7 @@ import type { CanonicalMapData } from "../src/shared/canonical-map.js";
 import { populateCanonicalWorld } from "./canonical-world.js";
 import { Game, GameError, type ActionMessage } from "./game.js";
 import { JsonStore } from "./persist.js";
+import { acquireStateLock } from "./state-lock.js";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const SESSION_MS = 7 * 86400000;
@@ -60,6 +61,8 @@ export async function buildServer(
       process.env.STATE_FILE ??
       resolve(root, ".runtime/state.json"),
   );
+  const releaseStateLock = await acquireStateLock(store.filename);
+  try {
   const state = await store.read();
   let dirty = true;
   let saveError: string | null = null;
@@ -395,6 +398,21 @@ export async function buildServer(
             throw new GameError("Некорректное сообщение.");
           if (message.type === "move")
             game.move(id, message.x, message.z, message.rotation, message.running === true);
+          else if (message.type === "adminTeleport") {
+            const destination = game.adminTeleport(id, message.x, message.z);
+            const acknowledgement = JSON.stringify({ type: "teleport", ...destination });
+            const snapshot = JSON.stringify(game.snapshot(id));
+            // Other tabs belonging to this same authenticated account must reset
+            // prediction too; nearby players never receive a teleport command.
+            for (const ownSocket of clients.get(id) ?? []) {
+              const ownSession = state.sessions[connectionSessions.get(ownSocket) ?? ""];
+              if (!ownSession || ownSession.expiresAt <= Date.now()) ownSocket.close(1008, "Session expired");
+              else if (ownSocket.readyState === WebSocket.OPEN) {
+                ownSocket.send(acknowledgement);
+                ownSocket.send(snapshot);
+              }
+            }
+          }
           else if (message.type === "action") game.action(id, message);
           else if (message.type === "chat") game.chat(id, message.text);
           else throw new GameError("Неизвестный тип сообщения.");
@@ -480,10 +498,18 @@ export async function buildServer(
         server.close((error) => (error ? reject(error) : done())),
       );
     for (const player of Object.values(state.players)) player.online = false;
-    await checkpoints();
-    await store.flush();
+    try {
+      await checkpoints();
+      await store.flush();
+    } finally {
+      await releaseStateLock();
+    }
   };
   return { app, server, game, store, state, close, tick };
+  } catch (error) {
+    await releaseStateLock();
+    throw error;
+  }
 }
 
 // argv retains /current while the module URL resolves to the real release path.

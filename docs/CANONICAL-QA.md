@@ -122,13 +122,13 @@ Z=-253.5..-5.5. This is one component, not the whole original map.
 Near flax placements `aw:58413`, `aw:56363`, `aw:56869` and Bob `aw:58407` are
 reachable for interaction. A zero approach route length means already within
 interaction range of a reachable cell; it does not mean standing on the object.
-The nearest source scorpion placement `aw:66089` needs about 70.34 m of walking
+The nearest source scorpion placement `aw:66089` needs about 70.63 m of walking
 to a 4 m approach; `aw:65054` has an approximately 15.01 m approach route.
 Close combat needs a stricter weapon range and clear terrain line, so broad
 interaction proximity is not proof of a usable melee position.
 
-A stricter 0.85 m approach to Scorpion `aw:65054` at `(-128.5, -225.5)` needs
-about **61.23 m**. A terrain-valid example is:
+Before the DDA correction, a stricter 0.85 m approach to Scorpion `aw:65054` at
+`(-128.5, -225.5)` was estimated at **61.23 m**. That earlier geometric example was:
 
 ```text
 (-139.5,-217.5) -> (-138.5,-217.5) -> (-137.5,-218.5)
@@ -144,15 +144,17 @@ An explicit `--combat-target` follows its geometric route without imposing the
 script's additional creature-avoidance policy; terrain and speed checks remain
 mandatory. Such a route can encounter other hostile creatures.
 
-Banks near the spawn have about 124.59..155.12 m approach routes; nearby traders
-need roughly 133.83..215.13 m despite much shorter direct distances. Terrain walls
+Banks near the spawn have about 124.82..155.78 m approach routes; nearby traders
+need roughly 134.63..215.59 m despite much shorter direct distances. Terrain walls
 explain the detours. The shared helper also prevents walking across the storage
 seam at X=0. Transitions between disconnected areas are outside this flood audit.
 Reachable does not mean safe from aggressive creatures. The live smoke's hostile
 avoidance policy and shorter route cap intentionally provide a narrower result.
 
 Full graph/entity evidence:
-`artifacts/canonical-smoke/reachability-1790721074501.json`. The earlier
+`artifacts/canonical-smoke/reachability-1790723006656.json`, refreshed after the
+DDA correction. Component and entity counts remain unchanged; route lengths
+reflect the corrected traversal. The earlier
 `reachability-1790720754733.json` sampled integer nodes before the shared grid
 was changed to cell centres and is retained as superseded evidence.
 

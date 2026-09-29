@@ -93,15 +93,126 @@
     ]
   },
   "house.glb": {
-    "bytes": 235944,
-    "triangles": 3256,
+    "bytes": 1925924,
+    "triangles": 9696,
+    "materialPrimitives": 8,
     "skinJoints": [],
-    "animations": []
+    "animations": [],
+    "bounds": {
+      "min": [
+        -2.4649999141693115,
+        0,
+        -2.1544997692108154
+      ],
+      "max": [
+        2.4649999141693115,
+        4.732999801635742,
+        2.6080000400543213
+      ],
+      "size": [
+        4.929999828338623,
+        4.732999801635742,
+        4.762499809265137
+      ]
+    },
+    "graphicsBuild": "detailed-colony-original-2026-09-30"
   },
   "tree.glb": {
-    "bytes": 57516,
-    "triangles": 552,
+    "bytes": 558804,
+    "triangles": 3936,
+    "materialPrimitives": 2,
     "skinJoints": [],
-    "animations": []
+    "animations": [],
+    "bounds": {
+      "min": [
+        -1.571804165840149,
+        -0.00919102132320404,
+        -1.396237850189209
+      ],
+      "max": [
+        1.6165776252746582,
+        5.079148769378662,
+        1.1589382886886597
+      ],
+      "size": [
+        3.188381791114807,
+        5.088339790701866,
+        2.5551761388778687
+      ]
+    },
+    "graphicsBuild": "detailed-colony-original-2026-09-30"
+  },
+  "npc-bob.glb": {
+    "bytes": 5275440,
+    "triangles": 26508,
+    "materialPrimitives": 14,
+    "skinJoints": [
+      65
+    ],
+    "animations": [
+      {
+        "name": "Sprint",
+        "duration": 0.7083333333333334,
+        "channels": 195
+      },
+      {
+        "name": "Interact",
+        "duration": 2.0416666666666665,
+        "channels": 195
+      },
+      {
+        "name": "Shoot",
+        "duration": 0.6666666666666666,
+        "channels": 195
+      },
+      {
+        "name": "Death",
+        "duration": 2.4166666666666665,
+        "channels": 195
+      },
+      {
+        "name": "Hit",
+        "duration": 0.375,
+        "channels": 195
+      },
+      {
+        "name": "Attack",
+        "duration": 1.5416666666666667,
+        "channels": 195
+      },
+      {
+        "name": "Run",
+        "duration": 0.9583333333333334,
+        "channels": 195
+      },
+      {
+        "name": "Walk",
+        "duration": 1.375,
+        "channels": 195
+      },
+      {
+        "name": "Idle",
+        "duration": 2.5416666666666665,
+        "channels": 195
+      }
+    ],
+    "bounds": {
+      "min": [
+        -0.9372173798631149,
+        -0.02716019016888566,
+        -0.23140342686257095
+      ],
+      "max": [
+        0.9372175720579651,
+        1.8100767953790968,
+        0.14588605116112827
+      ],
+      "size": [
+        1.8744349519210801,
+        1.8372369855479824,
+        0.3772894780236992
+      ]
+    },
+    "graphicsBuild": "detailed-colony-original-2026-09-30"
   }
 }

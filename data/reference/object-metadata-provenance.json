@@ -1,0 +1,46 @@
+{
+  "sourceUrl": "http://site.awplanet.com/client/single/build/webdata.data",
+  "sourceSha256": "9de0b9112f724166809ed91807333f806037721e45dba123e21056d15a63b848",
+  "edition": "AWPlanet Forever single-player public client",
+  "recordSize": 256,
+  "records": 888,
+  "damageTypes": [
+    "Cutting",
+    "Impaling",
+    "Deafening",
+    "Heat",
+    "Cold",
+    "Electricity",
+    "Chemicals",
+    "Force"
+  ],
+  "schema": {
+    "modelId": 144,
+    "textureId": 148,
+    "hp": 184,
+    "resistances": 213,
+    "damage": 221,
+    "weaponSkillIdRaw": 229,
+    "range": 230,
+    "level": 231,
+    "behaviorFlags": 232,
+    "secondaryFlagsRaw": 233
+  },
+  "evidence": {
+    "decoder": "release-static.wat f660, lines 92511-93492; u8 f626, u16 f628, i16 f629, i32 f625",
+    "creatureHp": "f608, lines 79656-79662 initializes entity HP from catalog runtime offset 32 (raw 184)",
+    "range": "f279 runtime offset 73; f573 compares Chebyshev distance to range",
+    "level": "f280 runtime offset 74; f580 uses this field in accuracy checks",
+    "damage": "f660 transfers raw 221..228 to damage pairs at runtime offset 68; f580/f225 damage calculation",
+    "resistances": "f660 transfers raw 213..220 to resistance array at runtime offset 64; f580 uses eight resistance entries"
+  },
+  "limitations": [
+    "hp is HP for creatures but durability or sentinel for other object classes; 65535 must not be treated as 65535 creature HP.",
+    "behaviorFlags is a legacy alias of wanderRadius, not a bitmask. f608 uses runtime75 as origin +/- radius, and f230 computes trunc((random-0.5)*2*(radius+1)).",
+    "secondaryFlagsRaw is retained numeric data, not a complete decoded behavior specification.",
+    "level is creature level for creature records; f510 also uses the same byte as equipment accuracy bonus. Object class context is required.",
+    "level zero and range zero are retained exactly; unnamed records are excluded.",
+    "No descriptive prose, meshes, textures or executable code are exported.",
+    "The public Forever catalog is not independently verified as the exact Classic online-server balance."
+  ]
+}

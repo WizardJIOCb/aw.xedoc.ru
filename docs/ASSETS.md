@@ -8,8 +8,9 @@ reconstruction of the original AWPlanet art library.
 | ----------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | --------------- |
 | `hero.glb`  | Human colony explorer, expedition suit, gloves, boots, ceramic vest, field backpack                          | 25,020 triangles; 8 skinned meshes; one 65-joint skin | 4,932,552 bytes |
 | `drone.glb` | Animated Quaternius Eye Drone                                                                                | 3,530 triangles; one 8-joint skin                     | 1,334,536 bytes |
-| `house.glb` | Original colony building with plaster, pitched roof, illuminated windows, door, chimney, controller, antenna | 3,256 triangles                                       | 235,944 bytes   |
-| `tree.glb`  | Original stylized branching broadleaf tree                                                                   | 552 triangles                                         | 57,516 bytes    |
+| `house.glb` | Detailed original colony building with plaster PBR, recessed windows, separate roofing panels, services     | 9,696 triangles; 8 material primitives                | 1,925,924 bytes |
+| `tree.glb`  | Original curved branching tree with bark PBR and 430 individual leaves                                       | 3,936 triangles; 2 material primitives                | 558,804 bytes   |
+| `npc-bob.glb` | Colony worker with original sculpted gray beard, hair and forehead goggles                               | 26,508 triangles; one 65-joint skin                   | 5,275,440 bytes |
 
 `asset-manifest.json` records the generated files' structural measurements.
 `source-art/colony-assets.blend` preserves the editable Blender scene, lighting and
@@ -78,11 +79,16 @@ native clips are retained: `Attack`, `BackFlip`, `Charging`, `Hit`, `Idle`,
 Native mesh orientation is preserved; check rotation against the scene's
 desired attack direction.
 
-All retained colour maps are embedded in the GLBs. Large source normal and ORM
-maps were omitted for this browser prototype; smooth mesh normals and material
+Hero and drone retained colour maps are embedded in their GLBs. Their large
+source normal and ORM maps were omitted for this browser prototype; smooth mesh normals and material
 roughness remain. The original local source files were not edited.
 
 ## Original props
+
+The props were replaced by the detailed graphics build. Current dimensions,
+PBR provenance, measured draw counts, Bob rig checks and reproduction commands
+are documented in [GRAPHICS-ASSETS.md](GRAPHICS-ASSETS.md). The description below
+records the preserved earlier source scene.
 
 House and tree geometry are authored by `scripts/build-assets.py` using
 Blender 5.1. House facade faces **+Z**, footprint is about 4.8 by 3.95 m, roof

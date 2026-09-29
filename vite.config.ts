@@ -4,10 +4,10 @@ export default defineConfig({
     __ASSET_VERSION__: JSON.stringify(process.env.SOURCE_COMMIT ?? "dev"),
   },
   server: {
-    port: 5188,
+    port: 5190,
     proxy: {
-      "/api": "http://127.0.0.1:3188",
-      "/ws": { target: "ws://127.0.0.1:3188", ws: true },
+      "/api": "http://127.0.0.1:3190",
+      "/ws": { target: "ws://127.0.0.1:3190", ws: true },
     },
   },
   build: { target: "es2022" },

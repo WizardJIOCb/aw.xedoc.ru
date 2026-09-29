@@ -2,6 +2,10 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import type { Entity, Player } from "../shared/types";
+import { NavigationGrid, screenRelativeMovement, type Point } from "./navigation";
+import { PlanetGraphics } from "./graphics";
+import { CanonicalWorld, familyModel } from "./canonical-world";
+import { terrainHeight, terrainWalkable, terrainSegmentClear, type CanonicalMapData, type MapDefinition } from "../shared/canonical-map";
 
 type Avatar = {
   root: THREE.Group;
@@ -23,38 +27,61 @@ const colors = {
 };
 export class PlanetScene {
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(50, 1, 0.1, 380);
+  camera = new THREE.PerspectiveCamera(35, 1, 0.1, 380);
   renderer: THREE.WebGLRenderer;
   player = new THREE.Vector3(0, 0, 8);
-  yaw = Math.PI * 0.9;
-  pitch = 0.4;
-  distance = 8;
+  yaw = Math.PI / 4;
+  readonly pitch = THREE.MathUtils.degToRad(55);
+  distance = 28;
   keys = new Set<string>();
   moving = false;
   focused = true;
   bounds: THREE.Box3[] = [];
   avatars = new Map<string, Avatar>();
   objects = new Map<string, THREE.Group>();
-  destination?: { x: number; z: number };
+  private destinationPoint?: Point;
+  private route: Point[] = [];
+  private navigation!: NavigationGrid;
+  private destinationMarker!: THREE.Group;
+  private pendingEntity?: string;
+  private entityPlannedAt = 0;
+  private graphics!: PlanetGraphics;
+  private readonly clickRay = new THREE.Raycaster();
+  get destination(): Point | undefined { return this.destinationPoint; }
+  set destination(point: Point | undefined) {
+    this.onNavigate?.();
+    this.pendingEntity = undefined;
+    if (point) this.planDestination(point); else this.clearNavigation();
+  }
   entities: Entity[] = [];
   selfId = "";
   model?: THREE.Group;
   clips: THREE.AnimationClip[] = [];
   drone?: THREE.Group;
   droneClips: THREE.AnimationClip[] = [];
-  onMove?: (x: number, z: number, rotation: number) => void;
+  onMove?: (x: number, z: number, rotation: number, running?: boolean) => void;
   onInteract?: () => void;
   onAttack?: () => void;
+  onEntityClick?: (entity: Entity) => void;
+  onNavigate?: () => void;
   onShortcut?: (key: string) => void;
   last = performance.now();
   sendAt = 0;
   clock = 0;
   quality = "high";
   private dragging = false;
+  private pointerStart?: { x: number; y: number; button: number };
   private lastPointer = { x: 0, y: 0 };
   private sun: THREE.DirectionalLight;
   private water!: THREE.Mesh;
   private ready = false;
+  private canonical?: CanonicalMapData;
+  private canonicalWorld?: CanonicalWorld;
+  private mapDefinitions = new Map<number,MapDefinition>();
+  private worldNodes: THREE.Object3D[] = [];
+  private bob?: {model:THREE.Group;clips:THREE.AnimationClip[]};
+  private sceneryTree?:THREE.Group;
+  private stamina=100;
   private houses: THREE.Group[] = [];
   private trees: THREE.Group[] = [];
   private entityMixers = new Map<string, THREE.AnimationMixer>();
@@ -68,7 +95,10 @@ export class PlanetScene {
   >();
   private frameCount = 0;
   private frameAt = performance.now();
-  constructor(public host: HTMLElement) {
+  constructor(public host: HTMLElement, map?: CanonicalMapData) {
+    this.canonical=map;
+    if(map){this.mapDefinitions=new Map(map.definitions.map(d=>[d.originalId,d]));this.player.set(map.spawn.x,terrainHeight(map,map.spawn.x,map.spawn.z),map.spawn.z);}
+    if(map){this.camera.far=110;this.camera.updateProjectionMatrix();}
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       powerPreference: "high-performance",
@@ -80,6 +110,7 @@ export class PlanetScene {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.1;
     host.append(this.renderer.domElement);
+    this.renderer.domElement.dataset.viewMode = "isometric";
     this.scene.background = new THREE.Color(0xa8c7c6);
     this.scene.fog = new THREE.FogExp2(0xa8c7c6, 0.0055);
     this.scene.add(new THREE.HemisphereLight(0xdbe9ee, 0x526044, 1.55));
@@ -94,14 +125,30 @@ export class PlanetScene {
     this.sun.shadow.normalBias = 0.03;
     this.sun.shadow.bias = -0.0001;
     this.scene.add(this.sun, this.sun.target);
+    const before=new Set(this.scene.children);
     this.buildWorld();
-    this.avatar("preview", 0, 8);
+    this.worldNodes=this.scene.children.filter(o=>!before.has(o));
+    this.installNavigation();
+    this.graphics = new PlanetGraphics(this.renderer, this.scene, this.camera);
+    this.destinationMarker = this.makeDestinationMarker();
+    this.scene.add(this.destinationMarker);
+    this.camera.position.copy(this.player).add(new THREE.Vector3(Math.sin(this.yaw) * Math.cos(this.pitch), Math.sin(this.pitch), Math.cos(this.yaw) * Math.cos(this.pitch)).multiplyScalar(this.distance));
+    this.camera.lookAt(this.player);
+    this.avatar("preview", this.player.x, this.player.z);
     this.resize();
     window.addEventListener("resize", () => this.resize());
     window.addEventListener("keydown", (e) => {
       if (this.typing()) return;
       const k = e.key.toLowerCase();
+      if (!this.focused) {
+        if (k === "escape" && !e.repeat) this.onShortcut?.(k);
+        return;
+      }
       this.keys.add(k);
+      if (["w", "a", "s", "d", "ц", "ф", "ы", "в", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(k) && !e.repeat) {
+        this.onNavigate?.();
+        this.clearNavigation();
+      }
       if ([" ", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(k))
         e.preventDefault();
       if (!e.repeat) {
@@ -117,53 +164,45 @@ export class PlanetScene {
     window.addEventListener("blur", () => {
       this.keys.clear();
       this.dragging = false;
+      this.pointerStart = undefined;
     });
     this.renderer.domElement.addEventListener("pointerdown", (e) => {
-      this.dragging = true;
+      if (!this.focused) return;
+      this.pointerStart = { x: e.clientX, y: e.clientY, button: e.button };
+      this.dragging = e.button === 2;
       this.lastPointer = { x: e.clientX, y: e.clientY };
-      this.renderer.domElement.setPointerCapture(e.pointerId);
+      if (this.dragging) {
+        e.preventDefault();
+        this.renderer.domElement.setPointerCapture(e.pointerId);
+      }
     });
     this.renderer.domElement.addEventListener("pointermove", (e) => {
       if (this.dragging) {
         this.yaw -= (e.clientX - this.lastPointer.x) * 0.005;
-        this.pitch = THREE.MathUtils.clamp(
-          this.pitch + (e.clientY - this.lastPointer.y) * 0.003,
-          0.08,
-          1.1,
-        );
         this.lastPointer = { x: e.clientX, y: e.clientY };
       }
     });
     this.renderer.domElement.addEventListener(
       "pointerup",
-      () => (this.dragging = false),
+      (e) => {
+        const click = this.pointerStart;
+        this.pointerStart = undefined;
+        this.dragging = false;
+        if (this.renderer.domElement.hasPointerCapture(e.pointerId)) this.renderer.domElement.releasePointerCapture(e.pointerId);
+        if (click?.button === 0 && Math.hypot(e.clientX - click.x, e.clientY - click.y) < 6 && this.ready && this.focused) this.clickDestination(e.clientX, e.clientY);
+      },
     );
     this.renderer.domElement.addEventListener("contextmenu", (e) =>
       e.preventDefault(),
     );
-    this.renderer.domElement.addEventListener("dblclick", (e) => {
-      if (!this.ready) return;
-      const r = this.renderer.domElement.getBoundingClientRect(),
-        pointer = new THREE.Vector2(
-          ((e.clientX - r.left) / r.width) * 2 - 1,
-          (-(e.clientY - r.top) / r.height) * 2 + 1,
-        ),
-        raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(pointer, this.camera);
-      const hit = raycaster.ray.intersectPlane(
-        new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
-        new THREE.Vector3(),
-      );
-      if (hit && Math.abs(hit.x) < 120 && Math.abs(hit.z) < 120)
-        this.destination = { x: hit.x, z: hit.z };
-    });
+    this.renderer.domElement.addEventListener("pointercancel", () => { this.dragging = false; this.pointerStart = undefined; });
     this.renderer.domElement.addEventListener(
       "wheel",
       (e) => {
         this.distance = THREE.MathUtils.clamp(
-          this.distance + e.deltaY * 0.007,
-          3.5,
-          16,
+          this.distance + e.deltaY * 0.015,
+          18,
+          42,
         );
         e.preventDefault();
       },
@@ -178,10 +217,12 @@ export class PlanetScene {
           a.root.remove(...a.root.children);
           this.installModel(a, this.model, this.clips);
         }
+        this.rebuildEntities();
       },
       undefined,
       () => {},
     );
+    new GLTFLoader().load(`/assets/npc-bob.glb?v=${__ASSET_VERSION__}`,(g)=>{this.bob={model:g.scene,clips:g.animations};this.rebuildEntities();},undefined,()=>{});
     new GLTFLoader().load(
       `/assets/drone.glb?v=${__ASSET_VERSION__}`,
       (g) => {
@@ -193,7 +234,7 @@ export class PlanetScene {
       () => {},
     );
     void Promise.all(
-      ["chicken", "rat", "scorpion"].map(async (name) => {
+      ["chicken", "rat", "scorpion", "deer", "dog", "spider"].map(async (name) => {
         try {
           const g = await new GLTFLoader().loadAsync(
             `/assets/${name}.glb?v=${__ASSET_VERSION__}`,
@@ -224,6 +265,9 @@ export class PlanetScene {
     new GLTFLoader().load(
       `/assets/tree.glb?v=${__ASSET_VERSION__}`,
       (g) => {
+        this.sceneryTree=g.scene;
+        this.canonicalWorld?.installTreeModel(g.scene);
+        if(this.canonical)this.rebuildEntities();
         for (const t of this.trees) {
           t.remove(...t.children);
           const model = g.scene.clone(true);
@@ -241,6 +285,23 @@ export class PlanetScene {
     );
     this.tick();
   }
+  private installNavigation() {
+    this.navigation=this.canonical
+      ? new NavigationGrid([],this.canonical.layout.limit,1,0,{walkable:p=>terrainWalkable(this.canonical!,p.x,p.z),segmentClear:(a,b)=>terrainSegmentClear(this.canonical!,a,b)})
+      : new NavigationGrid(this.bounds.map(b=>({minX:b.min.x,maxX:b.max.x,minZ:b.min.z,maxZ:b.max.z})));
+  }
+  loadCanonicalMap(map:CanonicalMapData) {
+    this.clearNavigation();
+    for(const node of this.worldNodes)this.scene.remove(node);
+    this.houses=[];this.trees=[];this.bounds=[];
+    this.canonical=map;this.mapDefinitions=new Map(map.definitions.map(d=>[d.originalId,d]));
+    const before=new Set(this.scene.children);this.buildWorld();this.worldNodes=this.scene.children.filter(o=>!before.has(o));
+    this.installNavigation();this.rebuildEntities();
+    if(!this.ready)this.player.set(map.spawn.x,terrainHeight(map,map.spawn.x,map.spawn.z),map.spawn.z);
+  }
+  private groundHeight(x:number,z:number){return this.canonical?terrainHeight(this.canonical,x,z):0;}
+  private interactionDistance(entity:Entity){return this.canonical&&entity.type==="monster"?.9:3.4;}
+  private entityDefinition(e:Entity){const id=(e as Entity&{originalId?:number}).originalId??Number(e.id.match(/^aw_\d+_(\d+)/)?.[1]);return this.mapDefinitions.get(id);}
   typing() {
     const el = document.activeElement;
     return (
@@ -248,6 +309,95 @@ export class PlanetScene {
       el instanceof HTMLTextAreaElement ||
       el instanceof HTMLSelectElement
     );
+  }
+  moveTo(x: number, z: number) { this.destination = { x, z }; }
+  private clearNavigation() {
+    this.route = [];
+    this.destinationPoint = undefined;
+    this.pendingEntity = undefined;
+    if (this.destinationMarker) this.destinationMarker.visible = false;
+    this.renderer.domElement.dataset.routePoints = "0";
+  }
+  private planDestination(point: Point) {
+    this.route = this.navigation.findRoute(this.player, point);
+    if(this.canonical&&this.pendingEntity&&this.route.length){
+      const entity=this.entities.find(e=>e.id===this.pendingEntity);
+      if(entity?.type==="monster"){
+        const end=this.route.at(-1)!,distance=Math.hypot(end.x-entity.x,end.z-entity.z);
+        if(distance>.8&&distance<1.6){const standOff={x:entity.x+(end.x-entity.x)/distance*.8,z:entity.z+(end.z-entity.z)/distance*.8};if(this.navigation.segmentClear(end,standOff)){this.route.push(standOff);}}
+      }
+    }
+    this.destinationPoint = this.route.at(-1);
+    if (!this.destinationPoint) {
+      this.clearNavigation();
+      this.renderer.domElement.dataset.routeState = "blocked";
+      return;
+    }
+    this.destinationMarker.position.set(this.destinationPoint.x, this.groundHeight(this.destinationPoint.x,this.destinationPoint.z)+.08, this.destinationPoint.z);
+    this.destinationMarker.visible = true;
+    this.renderer.domElement.dataset.routeState = "moving";
+    this.renderer.domElement.dataset.routePoints = String(this.route.length);
+  }
+  private makeDestinationMarker() {
+    const marker = new THREE.Group();
+    const material = new THREE.MeshBasicMaterial({ color: 0xb3e9d2, transparent: true, opacity: .85, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    for (const [inside, outside] of [[.68, .75], [.33, .36]]) {
+      const ring = new THREE.Mesh(new THREE.RingGeometry(inside, outside, 64), material);
+      ring.rotation.x = -Math.PI / 2;
+      ring.renderOrder = 3;
+      marker.add(ring);
+    }
+    for (let i = 0; i < 4; i++) {
+      const line = new THREE.Mesh(new THREE.PlaneGeometry(.1, .22), material);
+      line.rotation.x = -Math.PI / 2;
+      line.rotation.z = i * Math.PI / 2;
+      line.position.set(Math.sin(i * Math.PI / 2) * .88, .004, Math.cos(i * Math.PI / 2) * .88);
+      line.renderOrder = 3;
+      marker.add(line);
+    }
+    marker.visible = false;
+    return marker;
+  }
+  private clickDestination(clientX: number, clientY: number) {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    const pointer = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
+    this.scene.updateMatrixWorld(true);
+    this.clickRay.setFromCamera(pointer, this.camera);
+    // Only interactive groups are traversed; scenery, vegetation and all world meshes are excluded.
+    const hits = this.clickRay.intersectObjects([...this.objects.values()].filter(o => o.visible), true);
+    for (const hit of hits) {
+      let ancestor: THREE.Object3D | null = hit.object;
+      while (ancestor && !ancestor.userData.entityId) ancestor = ancestor.parent;
+      if (!ancestor) continue;
+      const entity = this.entities.find(e => e.id === ancestor!.userData.entityId && e.alive !== false && e.stock !== 0);
+      if (!entity) continue;
+      const occluded = this.bounds.some(b => {
+        const point = this.clickRay.ray.intersectBox(b, new THREE.Vector3());
+        return point && point.distanceTo(this.clickRay.ray.origin) < hit.distance - .05;
+      });
+      if (!occluded) { this.approachEntity(entity); return; }
+    }
+    const ground = this.canonicalWorld?.groundHit(this.clickRay)?.point ?? (!this.canonical ? this.clickRay.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3()) : undefined);
+    if (ground) this.moveTo(ground.x, ground.z);
+  }
+  private approachEntity(entity: Entity) {
+    this.onNavigate?.();
+    this.clearNavigation();
+    this.pendingEntity = entity.id;
+    this.entityPlannedAt = performance.now();
+    if (Math.hypot(entity.x - this.player.x, entity.z - this.player.z) <= this.interactionDistance(entity)) this.finishEntityApproach(entity);
+    else this.planDestination(entity);
+  }
+  private finishEntityApproach(entity: Entity) {
+    this.clearNavigation();
+    const avatar = this.avatars.get(this.selfId);
+    if (avatar) {
+      avatar.rotation = Math.atan2(entity.x - this.player.x, entity.z - this.player.z);
+      this.onMove?.(this.player.x, this.player.z, avatar.rotation,false);
+      this.sendAt = performance.now();
+    }
+    if (this.onEntityClick) this.onEntityClick(entity);
+    else this.onInteract?.();
   }
   mat(color: number, roughness = 0.82, metalness = 0) {
     return new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -398,7 +548,7 @@ export class PlanetScene {
   }
   buildWorld() {
     const sky = new THREE.Mesh(
-      new THREE.SphereGeometry(350, 24, 16),
+      new THREE.SphereGeometry(this.canonical?650:350, 24, 16),
       new THREE.ShaderMaterial({
         side: THREE.BackSide,
         depthWrite: false,
@@ -426,6 +576,14 @@ export class PlanetScene {
       -230,
     );
     moon.castShadow = false;
+    if(this.canonical){
+      this.canonicalWorld=new CanonicalWorld(this.canonical);this.scene.add(this.canonicalWorld.root);
+      if(this.sceneryTree)this.canonicalWorld.installTreeModel(this.sceneryTree);
+      this.renderer.domElement.dataset.mapMode="original-grid";
+      this.renderer.domElement.dataset.mapPlacements=String(this.canonical.placements.length);
+      this.renderer.domElement.dataset.mapObjectTypes=String(this.canonical.definitions.length);
+      return;
+    }
     const textureCanvas = document.createElement("canvas");
     textureCanvas.width = 512;
     textureCanvas.height = 512;
@@ -453,6 +611,7 @@ export class PlanetScene {
       this.scene,
     );
     ground.rotation.x = -Math.PI / 2;
+    ground.userData.surface = "grass";
     ground.castShadow = false;
     const road = this.mat(colors.sand);
     for (const [w, d, x, z] of [
@@ -470,6 +629,7 @@ export class PlanetScene {
         z,
       );
       m.rotation.x = -Math.PI / 2;
+      m.userData.surface = "road";
       m.castShadow = false;
     }
     const plaza = this.mesh(
@@ -481,6 +641,7 @@ export class PlanetScene {
       0,
     );
     plaza.rotation.x = -Math.PI / 2;
+    plaza.userData.surface = "plaza";
     plaza.castShadow = false;
     this.house(0, -15, 10, 8, 0, "Банк Фармуна");
     this.house(14, -16, 8, 7, 0, "Мастерские");
@@ -745,12 +906,12 @@ export class PlanetScene {
   }
   avatar(id: string, x: number, z: number, rotation = 0) {
     const root = new THREE.Group();
-    root.position.set(x, 0, z);
+    root.position.set(x, this.groundHeight(x,z), z);
     const a: Avatar = {
       root,
       actions: {},
       current: "",
-      target: new THREE.Vector3(x, 0, z),
+      target: new THREE.Vector3(x, this.groundHeight(x,z), z),
       rotation,
     };
     if (this.model) this.installModel(a, this.model, this.clips);
@@ -760,24 +921,28 @@ export class PlanetScene {
     return a;
   }
   updatePlayers(self: Player, players: Player[]) {
+    this.stamina=self.stamina;
     if (this.selfId !== self.id) {
       this.selfId = self.id;
-      this.player.set(self.x, 0, self.z);
-      this.yaw = 0.5;
+      this.player.set(self.x, this.groundHeight(self.x,self.z), self.z);
+      this.clearNavigation();
       this.ready = true;
     }
     const a =
       this.avatars.get(self.id) ||
       this.avatar(self.id, self.x, self.z, self.rotation);
-    if (this.player.distanceTo(new THREE.Vector3(self.x, 0, self.z)) > 3)
-      this.player.set(self.x, 0, self.z);
+    if (Math.hypot(this.player.x-self.x,this.player.z-self.z) > 3) {
+      this.player.set(self.x, this.groundHeight(self.x,self.z), self.z);
+      this.clearNavigation();
+      this.onNavigate?.();
+    }
     a.target.copy(this.player);
     this.equipment(a, self.equipped);
     if (self.action === "attack") this.animation(a, "attack");
     for (const p of players) {
       if (p.id === self.id) continue;
       const other = this.avatars.get(p.id) || this.avatar(p.id, p.x, p.z);
-      other.target.set(p.x, 0, p.z);
+      other.target.set(p.x, this.groundHeight(p.x,p.z), p.z);
       other.rotation = p.rotation;
       this.equipment(other, p.equipped);
       this.animation(
@@ -794,6 +959,7 @@ export class PlanetScene {
     }
   }
   updateEntities(entities: Entity[]) {
+    entities=entities.filter(e=>this.entityDefinition(e)?.kind!=="decor"&&(!this.canonical||Math.hypot(e.x-this.player.x,e.z-this.player.z)<52));
     this.entities = entities;
     const ids = new Set(entities.map((e) => e.id));
     for (const [id, o] of this.objects) {
@@ -823,7 +989,7 @@ export class PlanetScene {
           animation.current = state;
         }
       }
-      o.position.set(e.x, 0, e.z);
+      o.position.set(e.x, this.groundHeight(e.x,e.z), e.z);
       o.visible = e.alive !== false && e.stock !== 0;
     }
   }
@@ -834,15 +1000,45 @@ export class PlanetScene {
     this.creatureActions.clear();
     this.updateEntities(this.entities);
   }
+  private installEntityModel(root:THREE.Group,entity:Entity,source:THREE.Group,clips:THREE.AnimationClip[],height:number){
+    const model=clone(source) as THREE.Group,bounds=new THREE.Box3().setFromObject(model);
+    model.scale.setScalar(height/Math.max(.1,bounds.getSize(new THREE.Vector3()).y));
+    model.position.y=-bounds.min.y*model.scale.y;
+    model.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});
+    root.add(model);
+    const mixer=new THREE.AnimationMixer(model),actions:Record<string,THREE.AnimationAction>={};
+    for(const clip of clips){const key=clip.name.toLowerCase(),action=mixer.clipAction(clip);actions[key]=action;if(/attack|hit|death/.test(key)){action.setLoop(THREE.LoopOnce,1);action.clampWhenFinished=true;}}
+    const idle=Object.keys(actions).find(k=>k.includes("idle"));if(idle)actions[idle].play();
+    this.entityMixers.set(entity.id,mixer);this.creatureActions.set(entity.id,{actions,current:idle??""});
+    mixer.addEventListener("finished",()=>{const state=this.creatureActions.get(entity.id);if(state&&idle){state.actions[state.current]?.fadeOut(.12);state.actions[idle].reset().fadeIn(.12).play();state.current=idle;}});
+  }
+  triggerEntityAttack(id:string){
+    const state=this.creatureActions.get(id);if(!state)return;
+    const attack=Object.keys(state.actions).find(k=>/attack|bite|hit/.test(k));if(!attack)return;
+    state.actions[state.current]?.fadeOut(.1);const action=state.actions[attack];action.setLoop(THREE.LoopOnce,1);action.clampWhenFinished=true;action.reset().fadeIn(.1).play();state.current=attack;
+  }
   entityObject(e: Entity) {
     const g = new THREE.Group();
     g.userData.entityId = e.id;
+    const definition=this.entityDefinition(e);
+    const descriptiveId=definition?`${e.id} ${definition.name.toLowerCase()}`:e.id;
+    if(definition&&(e.type==="station"||e.type==="transition"||e.type==="resource"||e.type==="decor")){
+      if(definition.family==="tree"&&this.sceneryTree){const model=this.sceneryTree.clone(true),bounds=new THREE.Box3().setFromObject(model),scale=2.8/Math.max(.1,bounds.getSize(new THREE.Vector3()).y);model.scale.setScalar(scale);model.position.y=-bounds.min.y*scale;model.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});g.add(model);return g;}
+      g.add(familyModel(definition));return g;
+    }
+    if(e.type==="npc"&&((definition?.originalId===285&&this.bob)||this.model)){
+      const source=definition?.originalId===285&&this.bob?this.bob:{model:this.model!,clips:this.clips};
+      this.installEntityModel(g,e,source.model,source.clips,1.8);return g;
+    }
     if (e.type === "monster") {
-      const kind = /chicken|hen/.test(e.id)
+      const kind = /chicken|hen|pheasant|stropterix/.test(descriptiveId)
         ? "chicken"
-        : /scorpion/.test(e.id)
+        : /spider/.test(descriptiveId) && this.creatures.has("spider")?"spider"
+        : /deer/.test(descriptiveId)&&this.creatures.has("deer")?"deer"
+        : /dog|rotoz|globbit|shaldar|lonter/.test(descriptiveId)&&this.creatures.has("dog")?"dog"
+        : /scorpion|spider/.test(descriptiveId)
           ? "scorpion"
-          : /rat/.test(e.id)
+          : /rat/.test(descriptiveId)
             ? "rat"
             : "";
       const creature = this.creatures.get(kind);
@@ -851,7 +1047,7 @@ export class PlanetScene {
         const b = new THREE.Box3().setFromObject(model);
         const scale =
           (
-            { chicken: 0.8, rat: 0.55, scorpion: 1.05 } as Record<
+            { chicken: 0.8, rat: 0.55, scorpion: 0.65,spider:.9,deer:1.55,dog:1.2 } as Record<
               string,
               number
             >
@@ -872,7 +1068,7 @@ export class PlanetScene {
         actions.idle?.play();
         this.entityMixers.set(e.id, mixer);
         this.creatureActions.set(e.id, { actions, current: "idle" });
-      } else if (/drone|droid/i.test(e.id) && this.drone) {
+      } else if (/drone|droid|loader/i.test(descriptiveId) && this.drone) {
         const d = clone(this.drone);
         const b = new THREE.Box3().setFromObject(d);
         d.scale.setScalar(
@@ -887,7 +1083,9 @@ export class PlanetScene {
         const clip = this.droneClips.find((c) => /idle/i.test(c.name));
         if (clip) mixer.clipAction(clip).play();
         this.entityMixers.set(e.id, mixer);
-      } else if (/chicken|hen/i.test(e.id)) {
+      } else if(definition?.family==="humanoid"&&this.model){this.installEntityModel(g,e,this.model,this.clips,1.8);
+      } else if(definition){g.add(familyModel(definition));
+      } else if (/chicken|hen/i.test(descriptiveId)) {
         this.mesh(
           new THREE.SphereGeometry(0.28, 12, 10),
           this.mat(0xe3dac3),
@@ -1079,6 +1277,7 @@ export class PlanetScene {
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.graphics?.resize(w, h);
   }
   setQuality(q: string) {
     this.quality = q;
@@ -1086,6 +1285,7 @@ export class PlanetScene {
       q === "low" ? 1 : Math.min(devicePixelRatio, 1.75),
     );
     this.renderer.shadowMap.enabled = q !== "low";
+    this.graphics.setQuality(q);
     this.resize();
   }
   tick = () => {
@@ -1094,53 +1294,63 @@ export class PlanetScene {
       dt = Math.min((now - this.last) / 1000, 0.05);
     this.last = now;
     this.clock += dt;
+    if (this.pendingEntity && this.ready && this.focused && !this.typing()) {
+      const target = this.entities.find(e => e.id === this.pendingEntity && e.alive !== false && e.stock !== 0);
+      if (!target) this.clearNavigation();
+      else if (Math.hypot(target.x - this.player.x, target.z - this.player.z) <= this.interactionDistance(target)) this.finishEntityApproach(target);
+      else if (this.destinationPoint && Math.hypot(target.x - this.destinationPoint.x, target.z - this.destinationPoint.z) > 1.2 && now - this.entityPlannedAt > 500) {
+        this.entityPlannedAt = now;
+        this.planDestination(target);
+      }
+    }
     let dx = 0,
       dz = 0;
     if (this.ready && this.focused && !this.typing()) {
-      if (this.keys.has("w") || this.keys.has("ц")) dz -= 1;
-      if (this.keys.has("s") || this.keys.has("ы")) dz += 1;
-      if (this.keys.has("a") || this.keys.has("ф")) dx -= 1;
-      if (this.keys.has("d") || this.keys.has("в")) dx += 1;
+      if (this.keys.has("w") || this.keys.has("ц") || this.keys.has("arrowup")) dz -= 1;
+      if (this.keys.has("s") || this.keys.has("ы") || this.keys.has("arrowdown")) dz += 1;
+      if (this.keys.has("a") || this.keys.has("ф") || this.keys.has("arrowleft")) dx -= 1;
+      if (this.keys.has("d") || this.keys.has("в") || this.keys.has("arrowright")) dx += 1;
     }
     let direction: THREE.Vector3 | undefined;
+    let remaining = Infinity;
     if (dx || dz) {
-      this.destination = undefined;
-      direction = new THREE.Vector3(dx, 0, dz)
-        .normalize()
-        .applyAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
-    } else if (this.destination) {
-      const diff = new THREE.Vector3(
-        this.destination.x - this.player.x,
-        0,
-        this.destination.z - this.player.z,
-      );
-      if (diff.length() < 1.5) this.destination = undefined;
-      else direction = diff.normalize();
+      this.clearNavigation();
+      const movement = screenRelativeMovement(dx, dz, this.yaw);
+      direction = new THREE.Vector3(movement.x, 0, movement.z);
+    } else if (this.route.length && this.ready && this.focused && !this.typing()) {
+      while (this.route.length > 1 && Math.hypot(this.route[0].x - this.player.x, this.route[0].z - this.player.z) < .16 && this.navigation.segmentClear(this.player, this.route[1])) this.route.shift();
+      const waypoint = this.route[0];
+      const diff = new THREE.Vector3(waypoint.x - this.player.x, 0, waypoint.z - this.player.z);
+      remaining = diff.length();
+      if (this.route.length === 1 && remaining < (this.pendingEntity?.length ? .04 : .35)) {
+        this.clearNavigation();
+        this.renderer.domElement.dataset.routeState = "complete";
+      } else if (remaining > .001) direction = diff.normalize();
+      else this.route.shift();
     }
     this.moving = !!direction;
     if (direction) {
-      const speed = this.keys.has("shift") ? 6.5 : 3.6;
-      const next = this.player.clone().addScaledVector(direction, speed * dt);
-      next.x = THREE.MathUtils.clamp(next.x, -119, 119);
-      next.z = THREE.MathUtils.clamp(next.z, -119, 119);
-      if (
-        !this.bounds.some(
-          (b) =>
-            next.x > b.min.x &&
-            next.x < b.max.x &&
-            next.z > b.min.z &&
-            next.z < b.max.z,
-        )
-      )
-        this.player.copy(next);
-      else this.destination = undefined;
+      const running=this.keys.has("shift")&&this.stamina>0;
+      const speed = this.canonical ? (running ? 2 : 1) : (running ? 6.5 : 3.6);
+      const next = this.player.clone().addScaledVector(direction, Math.min(speed * dt, remaining));
+      const limit=this.canonical?.layout.limit??119;
+      next.x = THREE.MathUtils.clamp(next.x, -limit, limit);
+      next.z = THREE.MathUtils.clamp(next.z, -limit, limit);
+      if (this.navigation.segmentClear(this.player, next)) this.player.copy(next);
+      else if (dx || dz) {
+        const slideX = new THREE.Vector3(next.x, 0, this.player.z), slideZ = new THREE.Vector3(this.player.x, 0, next.z);
+        const candidates = Math.abs(direction.x) > Math.abs(direction.z) ? [slideX, slideZ] : [slideZ, slideX];
+        const slide = candidates.find(point => this.navigation.segmentClear(this.player, point));
+        if (slide) this.player.copy(slide); else this.moving = false;
+      } else if (this.destinationPoint) this.planDestination(this.destinationPoint);
       const a = this.avatars.get(this.selfId);
       if (a) {
         a.rotation = Math.atan2(direction.x, direction.z);
-        this.animation(a, speed > 4 ? "run" : "walk");
+        this.animation(a, running ? "run" : "walk");
       }
     }
     const own = this.avatars.get(this.selfId);
+    this.player.y=this.groundHeight(this.player.x,this.player.z);
     if (own) {
       own.target.copy(this.player);
       const current = own.actions[own.current];
@@ -1153,7 +1363,7 @@ export class PlanetScene {
       )
         this.animation(own, "idle");
       if (now - this.sendAt > 75) {
-        this.onMove?.(this.player.x, this.player.z, own.rotation);
+        this.onMove?.(this.player.x, this.player.z, own.rotation,this.keys.has("shift")&&this.stamina>0);
         this.sendAt = now;
       }
     }
@@ -1168,39 +1378,34 @@ export class PlanetScene {
     }
     for (const mixer of this.entityMixers.values()) mixer.update(dt);
     for (const e of this.entities) {
-      if (e.type === "monster" && /drone|droid/i.test(e.id)) {
+      if (e.type === "monster" && /drone|droid|loader/i.test(this.entityDefinition(e)?.name??e.id)) {
         const o = this.objects.get(e.id);
         if (o) {
           o.rotation.y = Math.sin(this.clock * 0.5) * 0.8;
-          o.position.y = Math.sin(this.clock * 1.8) * 0.12;
+          o.position.y = this.groundHeight(e.x,e.z)+Math.sin(this.clock * 1.8) * 0.12;
         }
       }
     }
-    const target = this.player.clone().add(new THREE.Vector3(0, 1.5, 0));
-    if (!this.ready) target.set(0, 1, 2);
-    const camYaw = this.ready ? this.yaw : 0.55,
-      camPitch = this.ready ? this.pitch : 0.55,
-      camDistance = this.ready ? this.distance : 26;
+    const target = this.player.clone().add(new THREE.Vector3(0, .9, 0));
+    if (!this.ready&&!this.canonical) target.set(0, 1, 2);
+    const camYaw = this.yaw,
+      camPitch = this.pitch,
+      camDistance = this.distance;
     const offset = new THREE.Vector3(
       Math.sin(camYaw) * Math.cos(camPitch),
       Math.sin(camPitch),
       Math.cos(camYaw) * Math.cos(camPitch),
     ).multiplyScalar(camDistance);
-    let dist = camDistance;
-    const ray = new THREE.Ray(target, offset.clone().normalize());
-    if (this.ready)
-      for (const b of this.bounds) {
-        const hit = ray.intersectBox(b, new THREE.Vector3());
-        if (hit)
-          dist = Math.min(dist, Math.max(1.3, hit.distanceTo(target) - 0.3));
-      }
-    const desired = target.clone().addScaledVector(offset, dist / camDistance);
+    // An overhead camera keeps its height; roof intersections must never shorten it into a shoulder view.
+    const desired = target.clone().add(offset);
     this.camera.position.lerp(desired, 1 - Math.exp(-dt * 9));
     this.camera.lookAt(target);
     this.sun.position.set(this.player.x - 30, 55, this.player.z + 24);
     this.sun.target.position.copy(this.player);
     this.sun.target.updateMatrixWorld();
-    this.renderer.render(this.scene, this.camera);
+    if (this.destinationMarker.visible) this.destinationMarker.rotation.y = this.clock * .55;
+    if(this.canonicalWorld)this.canonicalWorld.updateVisibility(this.player.x,this.player.z,this.quality==="low"?30:this.quality==="medium"?42:54);
+    this.graphics.render(dt);
     this.frameCount++;
     if (now - this.frameAt >= 1000) {
       this.renderer.domElement.dataset.fps = String(
@@ -1212,6 +1417,9 @@ export class PlanetScene {
       this.renderer.domElement.dataset.triangles = String(
         this.renderer.info.render.triangles,
       );
+      this.renderer.domElement.dataset.cameraElevation = "55";
+      this.renderer.domElement.dataset.cameraDistance = this.distance.toFixed(1);
+      this.renderer.domElement.dataset.routePoints = String(this.route.length);
       this.frameCount = 0;
       this.frameAt = now;
     }

@@ -10,6 +10,7 @@ export type ItemDef = {
   healing?: number;
   skill?: string;
   requires?: Record<string, number>;
+  originalId?: number;
 };
 export type RecipeDef = {
   id: string;
@@ -32,6 +33,7 @@ export type Player = {
   stamina: number;
   maxStamina: number;
   force: number;
+  maxForce?: number;
   credits: number;
   level: number;
   xp: number;
@@ -47,6 +49,7 @@ export type Player = {
   online: boolean;
   action?: string;
   clan?: string | null;
+  combatTarget?: string;
 };
 export type Entity = {
   id: string;
@@ -62,6 +65,15 @@ export type Entity = {
   stock?: number;
   level?: number;
   state?: string;
+  originalId?: number;
+  placementIndex?: number;
+  family?: string;
+  role?: string;
+  modelId?: number;
+  attackRange?: number;
+  resistances?: number[];
+  damage?: { type: number; amount: number }[];
+  capabilities?: string[];
 };
 export type ChatLine = {
   id: string;
@@ -77,6 +89,15 @@ export type Snapshot = {
   entities: Entity[];
   messages: ChatLine[];
   time: number;
+  events?: CombatEvent[];
+  online?: number;
+};
+export type CombatEvent = {
+  id: number;
+  attacker: string;
+  target: string;
+  damage: number;
+  at: number;
 };
 export type WorldData = {
   items: ItemDef[];

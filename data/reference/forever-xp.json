@@ -1,0 +1,328 @@
+{
+  "source": {
+    "edition": "AWPlanet Forever (Single play)",
+    "url": "http://site.awplanet.com/client/single/build/release.wasm",
+    "sha256": "96c432dd5fab18cce63c94d034c53428ab979eaad9e6db105102d9561e7e5aeb",
+    "retrievedAt": "2026-09-30",
+    "sourceAnnouncement": "http://www.awplanet.com/2024/11/28-2024-awplanet-22-unity.html",
+    "classicCompatibility": "Unverified. Author reports substantially simplified progression; this table is not evidence of the Classic server XP curve."
+  },
+  "array": {
+    "runtimeTypedArrayAddress": 4384,
+    "runtimeDataAddress": 3872,
+    "count": 121,
+    "elementType": "signed i32 little-endian"
+  },
+  "thresholds": [
+    0,
+    100,
+    205,
+    316,
+    434,
+    558,
+    689,
+    828,
+    974,
+    1128,
+    1290,
+    1462,
+    1643,
+    1835,
+    2037,
+    2250,
+    2475,
+    2712,
+    2963,
+    3228,
+    3507,
+    3802,
+    4113,
+    4442,
+    4788,
+    5155,
+    5541,
+    5949,
+    6379,
+    6834,
+    7313,
+    7820,
+    8354,
+    8918,
+    9514,
+    10142,
+    10806,
+    11506,
+    12246,
+    13026,
+    13850,
+    14719,
+    15637,
+    16606,
+    17628,
+    18707,
+    19847,
+    21049,
+    22319,
+    23659,
+    25073,
+    26566,
+    28142,
+    29806,
+    31561,
+    33415,
+    35371,
+    37436,
+    39616,
+    41917,
+    44346,
+    46910,
+    49616,
+    52472,
+    55487,
+    58670,
+    62029,
+    65576,
+    69319,
+    73270,
+    77440,
+    81843,
+    86489,
+    91394,
+    96572,
+    102037,
+    107806,
+    113895,
+    120323,
+    127107,
+    134269,
+    141828,
+    149808,
+    158230,
+    167121,
+    176505,
+    186411,
+    196867,
+    207905,
+    219555,
+    231852,
+    244833,
+    258535,
+    272998,
+    288265,
+    304379,
+    321389,
+    339344,
+    358297,
+    378302,
+    399419,
+    421709,
+    445237,
+    470073,
+    496288,
+    523960,
+    553168,
+    584000,
+    616545,
+    650897,
+    687158,
+    725433,
+    765835,
+    808482,
+    853497,
+    901014,
+    951170,
+    1004113,
+    1059997,
+    1118986,
+    134152192
+  ],
+  "semantics": {
+    "minimumLevel": 1,
+    "maximumLevel": 120,
+    "levelFromXp": "1 + greatest index in 0..119 whose threshold <= totalXp (f507)",
+    "nextLevelXp": "thresholds[min(currentLevel,120)] (f707)",
+    "maxTotalXp": 134152192,
+    "capEvidence": "f508 clamps cumulative XP to134152192 (WAT53982-54000). Threshold120 is this cap; maximum displayed level120, not121.",
+    "experienceSkillFields": "f510 recomputes g4[i]=f507(g20[i]) for every index i=0..37 before equipment modifiers and derived properties; includes primary and professional/combat skill indices.",
+    "positiveAward": "f508 turns award0 into1; f505 may add equipment experience bonus; increments g20 and recalculates g4. Negative awards are reported as errors.",
+    "gainRate100x": "No universal100x gain multiplier established. The announcement says gameplay progression is roughly100x easier; do not infer Classic thresholds by multiplying these values."
+  },
+  "skillLabels": [
+    {
+      "originalId": 0,
+      "en": "Combat",
+      "ru": "Комбат",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 1,
+      "en": "Strength",
+      "ru": "Сила",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 2,
+      "en": "Dexterity",
+      "ru": "Ловкость",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 3,
+      "en": "Intelligence",
+      "ru": "Интеллект",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 4,
+      "en": "Vitality",
+      "ru": "Живучесть",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 5,
+      "en": "Intuition",
+      "ru": "Интуиция",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 6,
+      "en": "Fencing",
+      "ru": "Фехтование",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 7,
+      "en": "Heavy Weapons",
+      "ru": "Тяжелое Оружие",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 8,
+      "en": "Punching",
+      "ru": "Рукопашный",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 9,
+      "en": "Medieval Weapons",
+      "ru": "Устаревшее Оружие",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 10,
+      "en": "Automatic Weapons",
+      "ru": "Авто. Оружие",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 11,
+      "en": "Assembling Weapons",
+      "ru": "Собирающее Оружие",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 12,
+      "en": "Piercing",
+      "ru": "Колющее Оружие",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 13,
+      "en": "Cooking",
+      "ru": "Кулинария",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 14,
+      "en": "Fishing",
+      "ru": "Рыболовство",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 15,
+      "en": "Herbalism",
+      "ru": "Знахарство",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 16,
+      "en": "Woodwork",
+      "ru": "Плотничество",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 17,
+      "en": "Blacksmithing",
+      "ru": "Кузнечное Дело",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 18,
+      "en": "Geology",
+      "ru": "Геология",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 19,
+      "en": "Metallurgy",
+      "ru": "Металлургия",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 20,
+      "en": "Composite",
+      "ru": "Композиты",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 21,
+      "en": "Crafting",
+      "ru": "Ремесло",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 22,
+      "en": "High-tech",
+      "ru": "Высокие Технологии",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 26,
+      "en": "Lockpicking",
+      "ru": "Взлом Замков",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 32,
+      "en": "Scientific",
+      "ru": "Научная Работа",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 35,
+      "en": "Tailor",
+      "ru": "Портняжное Дело",
+      "baseLevelUsesThresholds": true
+    },
+    {
+      "originalId": 37,
+      "en": "Stamina",
+      "ru": "Выносливость",
+      "baseLevelUsesThresholds": true
+    }
+  ],
+  "evidence": {
+    "staticDisassembly": "artifacts/original-client/release-static.wat",
+    "readArray": "f422 WAT31189-31228 reads typed array data pointer at object+4, bounds at+12",
+    "xpToLevel": "f507 WAT53805-53883",
+    "nextThreshold": "f707 WAT101700-101725",
+    "xpAward": "f508 WAT53884-54073",
+    "allBaseSkills": "f510 WAT54141-54166"
+  },
+  "limitations": [
+    "Names/IDs0..37 include unused/reserved skill slots, not all are playable professions.",
+    "Equipment modifies derived effective levels after threshold conversion.",
+    "Combat level and secondary properties can be derived elsewhere; this file does not replace their formulas.",
+    "Original WASM was statically read and disassembled; not instantiated or executed."
+  ]
+}

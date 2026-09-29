@@ -1,0 +1,7 @@
+# Dialogue portrait
+
+`public/assets/portraits/bob.png` was generated with the built-in image-generation tool on 2026-09-30. It is new artwork. Original output is preserved at `C:/Users/Rodion/.codex/generated_images/01a0eeae-adda-7932-8356-6e93f4dd62ba/exec-1cd47edb-2211-4ddc-9b65-bf2afe059da3.png`. The game uses a copy; no original AW portrait was copied.
+
+Final prompt:
+
+> Use case: stylized-concept. Asset type: finished portrait artwork for a centered NPC dialogue in a science-fiction colony RPG fan reconstruction of AWPlanet. Create one vertical 2:3 portrait of Hermit Bob, an original older human male colonist, late 60s, weathered kindly intelligent face, gray beard, tousled gray hair, field goggles resting on forehead, worn ochre utility jacket over dark blue work clothes, small futuristic survival equipment on chest. Semi-realistic painted 3D RPG character art, detailed skin, fabric seams, tarnished metal, restrained cinematic lighting, warm sunlight from side and cool teal rim. Composition: head and shoulders to mid chest, one character centered, head completely inside picture, hands absent, eyes looking slightly toward the viewer. Background softly blurred colony workshop, muted charcoal teal, desaturated moss and ochre. Feeling: experienced, approachable, a specific lived-in person rather than generic fantasy wizard. No medieval fantasy accessories, no brand logos, no text, no watermark. This is new artwork, not a copy of any existing game's assets.

@@ -25,6 +25,8 @@ export type CraftJob = {
 };
 export type SavedState = {
   version: 1;
+  mapVersion?: string;
+  progressionVersion?: string;
   accounts: Record<string, Account>;
   sessions: Record<string, Session>;
   players: Record<string, Player>;

@@ -1,5 +1,9 @@
 import "./style.css";
 import { PlanetScene } from "./scene";
+import { NpcDialogue } from "./dialogue";
+import { Vector3 } from "three";
+import { mapPoint, terrainHeight, type CanonicalMapData } from "../shared/canonical-map";
+import { xpForLevel, nextLevelXp } from "../shared/progression";
 import type {
   Entity,
   Player,
@@ -31,28 +35,34 @@ let world: WorldData = {
   target: Entity | undefined;
 let reconnectTimer: ReturnType<typeof setTimeout> | undefined,
   connecting = false,
+  loggingOut = false,
   lastChat = "",
   lastPanelState = "";
 const app = $("#app");
 app.innerHTML = `
 <div id="world"></div><div class="vignette"></div>
 <header class="topbar"><a class="brand" href="/" aria-label="AWPlanet"><span class="planet-symbol">◉</span><span>AW<span class="brand-divider">/</span><b>PLANET</b><small>ВОЗВРАЩЕНИЕ</small></span></a><div class="status"><i id="status-dot"></i><span id="connection">ПОДКЛЮЧЕНИЕ К КОЛОНИИ</span></div><button class="quiet" id="quality" title="Переключить качество графики">Графика: высокая</button><button class="quiet" id="help">?</button></header>
-<section id="welcome" class="welcome"><div class="eyebrow">СНОВА ДОМА. НА ДРУГОЙ ПЛАНЕТЕ.</div><h1>Твоя история<br>продолжается<span>.</span></h1><p>Колонии, ремёсла, опасные пустоши.<br>Вернись в мир AWPlanet — теперь с видом от третьего лица.</p><div class="landing-meta"><span>01 / ФАРМУН</span><span>БРАУЗЕРНАЯ АЛЬФА</span></div><form id="auth" class="auth"><div class="auth-tabs"><button type="button" data-auth="register" class="active">Новый колонист</button><button type="button" data-auth="login">Я уже здесь был</button></div><label>Имя колониста<input name="name" autocomplete="username" maxlength="24" minlength="3" required placeholder="Как тебя запомнит планета?"></label><label>Пароль<input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="Не меньше 8 символов"></label><button class="primary" id="enter" type="submit">Начать экспедицию <span>↗</span></button><div id="auth-error" role="alert"></div></form><p class="alpha-note">Фанатская реконструкция. Начальная зона и часть механик уже доступны; полный мир восстанавливается по материалам оригинала.</p></section>
+<section id="welcome" class="welcome"><div class="eyebrow">СНОВА ДОМА. НА ДРУГОЙ ПЛАНЕТЕ.</div><h1>Твоя история<br>продолжается<span>.</span></h1><p>Колонии, ремёсла, опасные пустоши.<br>Вернись в мир AWPlanet — с изометрической камерой и живой колонией.</p><div class="landing-meta"><span>01 / ФАРМУН</span><span>БРАУЗЕРНАЯ АЛЬФА</span></div><form id="auth" class="auth"><div class="auth-tabs"><button type="button" data-auth="register" class="active">Новый колонист</button><button type="button" data-auth="login">Я уже здесь был</button></div><label>Имя колониста<input name="name" autocomplete="username" maxlength="24" minlength="3" required placeholder="Как тебя запомнит планета?"></label><label>Пароль<input name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="Не меньше 8 символов"></label><button class="primary" id="enter" type="submit">Начать экспедицию <span>↗</span></button><div id="auth-error" role="alert"></div></form><p class="alpha-note">Фанатская реконструкция. Карта восстановлена из публичного клиента. Механики и история мира продолжают развиваться.</p></section>
 <aside class="landing-coordinate">AW.01<br><span>ПЕРВАЯ КОЛОНИЯ</span><div class="coordinate-line"></div><small>ЖИВОЙ МИР · ОБЩИЙ СЕРВЕР</small></aside>
 <div id="game-ui" hidden><aside class="player-card"><div class="avatar-icon">◈</div><div class="player-info"><div><strong id="player-name"></strong><span id="level"></span></div><div class="meter"><i id="hp-bar"></i><span id="hp-label"></span></div><div class="meter stamina"><i id="stamina-bar"></i><span id="stamina-label"></span></div></div></aside>
 <aside class="map-card"><div class="map-heading"><span id="zone">ФАРМУН</span><span class="tiny">БЕЗОПАСНАЯ ЗОНА</span></div><canvas id="minimap" width="180" height="150"></canvas><div class="map-footer"><span id="coords">0 : 0</span><span id="credits">0 кр.</span></div></aside>
-<aside class="quest-card"><span class="eyebrow">ПЕРВЫЕ ШАГИ</span><h3 id="quest-title">Голос из прошлого</h3><p id="quest-text">Найди отшельника Боба у южной дороги. Он поможет освоиться в колонии.</p><button class="text-button" id="find-bob">Идти к Бобу ↗</button><button class="text-button" data-panel="guide" style="margin-left:12px">Мир ↗</button></aside>
+<aside class="quest-card"><span class="eyebrow">ПЕРВЫЕ ШАГИ</span><h3 id="quest-title">Голос из прошлого</h3><p id="quest-text">Поговори с отшельником Бобом. Он поможет освоиться в колонии.</p><button class="text-button" id="find-bob">Идти к Бобу ↗</button><button class="text-button" data-panel="guide" style="margin-left:12px">Мир ↗</button></aside>
 <div id="interaction" class="interaction" hidden><kbd>E</kbd><div><strong id="interaction-name"></strong><small id="interaction-verb"></small></div></div>
 <section class="chat"><div class="chat-head">ОБЩИЙ КАНАЛ <span id="online">1 в сети</span></div><div id="chat-log" aria-live="polite"></div><form id="chat-form"><input id="chat-input" maxlength="240" placeholder="Enter — написать в общий чат" autocomplete="off"><button aria-label="Отправить сообщение">↗</button></form></section>
-<footer class="game-footer"><div class="shortcuts"><button data-panel="inventory"><kbd>I</kbd>Инвентарь</button><button data-panel="craft"><kbd>C</kbd>Ремёсла</button><button data-panel="skills"><kbd>K</kbd>Персонаж</button><button data-panel="map"><kbd>M</kbd>Карта</button><button data-panel="social"><kbd>B</kbd>Общение</button></div><div class="hotbar"><button id="attack"><kbd>1</kbd><span>⚔</span><small>Атака</small></button><button id="heal"><kbd>2</kbd><span>✚</span><small>Еда</small></button><button id="interact-hotbar"><kbd>E</kbd><span>◇</span><small>Действие</small></button></div><div class="movement-hint">WASD — движение · Shift — бег<br>Мышь — камера · двойной клик — идти</div></footer></div>
+<footer class="game-footer"><div class="shortcuts"><button data-panel="inventory"><kbd>I</kbd>Инвентарь</button><button data-panel="craft"><kbd>C</kbd>Ремёсла</button><button data-panel="skills"><kbd>K</kbd>Персонаж</button><button data-panel="map"><kbd>M</kbd>Карта</button><button data-panel="social"><kbd>B</kbd>Общение</button></div><div class="hotbar"><button id="attack"><kbd>1</kbd><span>⚔</span><small>Атака</small></button><button id="heal"><kbd>2</kbd><span>✚</span><small>Еда</small></button><button id="interact-hotbar"><kbd>E</kbd><span>◇</span><small>Действие</small></button></div><div class="movement-hint">WASD — движение · Shift — бег<br>ЛКМ — идти / взаимодействовать · ПКМ — камера</div></footer></div>
 <div id="panel-backdrop" class="panel-backdrop" hidden><section class="panel"><div class="panel-heading"><div><span class="eyebrow" id="panel-kicker">ТВОЯ ЭКСПЕДИЦИЯ</span><h2 id="panel-title"></h2></div><button id="panel-close" class="quiet" aria-label="Закрыть">✕</button></div><nav class="panel-nav"><button data-panel="inventory">Инвентарь</button><button data-panel="craft">Ремёсла</button><button data-panel="skills">Персонаж</button><button data-panel="map">Карта</button><button data-panel="guide">Мир</button></nav><div id="panel-content"></div></section></div><div id="toasts" aria-live="polite"></div><div id="loading">Создаём планету<span></span></div>`;
 let scene: PlanetScene;
+let canonicalMap: CanonicalMapData;
 try {
-  scene = new PlanetScene($("#world"));
+  const response = await fetch("/api/map");
+  if (!response.ok) throw new Error("Не удалось загрузить карту мира.");
+  canonicalMap = await response.json();
+  scene = new PlanetScene($("#world"), canonicalMap);
   $("#loading").remove();
 } catch (e) {
   $("#loading").innerHTML =
-    "Не удалось запустить 3D. Нужен браузер с поддержкой WebGL.";
+    "Не удалось загрузить мир. Обнови страницу и проверь соединение.";
+  $("#loading").dataset.error = e instanceof Error ? e.message : String(e);
   throw e;
 }
 const item = (id: string): ItemDef | undefined =>
@@ -73,6 +83,62 @@ const kindName = (kind?: string) =>
     }) as Record<string, string>
   )[kind || ""] || "Предмет";
 const itemName = (id: string) => item(id)?.name || id;
+const dialogue = new NpcDialogue({
+  player: () => self,
+  itemName,
+  talk: (e) => action("talk", { target: e.id }),
+  service: (name) => openPanel(name),
+  opened: () => {
+    closePanel();
+    scene.destination = undefined;
+    scene.keys.clear();
+    scene.focused = false;
+    if (self?.combatTarget) action("disengage");
+  },
+  closed: () => {
+    scene.focused = !!self && !panel;
+  },
+});
+let lastCombatEvent = 0;
+const combatCard = document.createElement("aside");
+combatCard.className = "combat-target";
+combatCard.hidden = true;
+$("#game-ui").append(combatCard);
+function updateCombat(s: Snapshot) {
+  const enemy = s.entities.find(
+    (e) => e.id === s.self.combatTarget && e.alive !== false,
+  );
+  combatCard.hidden = !enemy;
+  if (enemy) {
+    combatCard.innerHTML = `<span class="dialogue-eyebrow">ПРОТИВНИК · УРОВЕНЬ ${enemy.level || 1}</span><strong>${esc(enemy.name)}</strong><div class="enemy-health"><i style="width:${(100 * (enemy.hp || 0)) / (enemy.maxHp || 1)}%"></i><span>${Math.ceil(enemy.hp || 0)} / ${enemy.maxHp || 1}</span></div><button aria-label="Прекратить бой">✕</button>`;
+    combatCard.querySelector("button")!.onclick = () => action("disengage");
+  }
+  for (const event of s.events || []) {
+    if (event.id <= lastCombatEvent) continue;
+    lastCombatEvent = event.id;
+    if (s.time - event.at > 1500) continue;
+    const entity = s.entities.find((e) => e.id === event.target);
+    if (event.attacker === s.self.id && entity) scene.triggerAttack(entity);
+    else scene.triggerEntityAttack(event.attacker);
+    const position =
+      entity ||
+      (event.target === s.self.id
+        ? s.self
+        : s.players.find((p) => p.id === event.target));
+    if (!position) continue;
+    const projection = new Vector3(position.x, terrainHeight(canonicalMap, position.x, position.z) + 1.8, position.z).project(
+      scene.camera,
+    );
+    if (projection.z > 1) continue;
+    const label = document.createElement("span");
+    label.className = `damage-number ${event.target === s.self.id ? "incoming" : ""}`;
+    label.textContent = `−${event.damage}`;
+    label.style.left = `${(projection.x * 0.5 + 0.5) * 100}%`;
+    label.style.top = `${(-projection.y * 0.5 + 0.5) * 100}%`;
+    $("#world").append(label);
+    setTimeout(() => label.remove(), 1000);
+  }
+}
 const skillName = (id: string) =>
   world.professions.find((s) => s.id === id)?.name ||
   (
@@ -123,12 +189,13 @@ function action(action: string, extra: Record<string, unknown> = {}) {
   send({ type: "action", action, ...extra });
 }
 function connect() {
-  if (connecting || ws?.readyState === WebSocket.OPEN) return;
+  if (!self || loggingOut || connecting || ws?.readyState === WebSocket.OPEN) return;
   connecting = true;
-  ws = new WebSocket(
+  const socket = ws = new WebSocket(
     `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`,
   );
   ws.onopen = () => {
+    lastCombatEvent = 0;
     connecting = false;
     $("#connection").textContent = "НА СВЯЗИ С КОЛОНИЕЙ";
     $("#status-dot").classList.add("connected");
@@ -141,13 +208,50 @@ function connect() {
       return;
     }
     if (data.type === "snapshot") snapshot(data);
-    else if (data.type === "notice") toast(data.text, data.kind);
+    else if (data.type === "notice" && !dialogue.notice(data.text, data.kind))
+      toast(data.text, data.kind);
   };
-  ws.onclose = () => {
+  ws.onclose = async () => {
+    if (ws !== socket) return;
     connecting = false;
+    if (!self || loggingOut) return;
     $("#connection").textContent = "ВОССТАНАВЛИВАЕМ СВЯЗЬ";
     $("#status-dot").classList.remove("connected");
-    if (self) reconnectTimer = setTimeout(connect, 2500);
+    try {
+      const session = await api("/api/session");
+      if (ws !== socket || !self || loggingOut) return;
+      if (!session.player) {
+        self = undefined;
+        others = [];
+        target = undefined;
+        if (reconnectTimer) clearTimeout(reconnectTimer);
+        reconnectTimer = undefined;
+        dialogue.close();
+        closePanel();
+        scene.destination = undefined;
+        scene.keys.clear();
+        scene.focused = false;
+        scene.selfId = "";
+        for (const avatar of scene.avatars.values()) scene.scene.remove(avatar.root);
+        scene.avatars.clear();
+        combatCard.hidden = true;
+        $("#interaction").hidden = true;
+        $("#game-ui").hidden = true;
+        $("#welcome").hidden = false;
+        $(".landing-coordinate").hidden = false;
+        $("#connection").textContent = "КОЛОНИЯ ОНЛАЙН";
+        $("#status-dot").classList.add("connected");
+        document.querySelector<HTMLButtonElement>('[data-auth="login"]')?.click();
+        $<HTMLInputElement>('#auth input[name="password"]').value = "";
+        return;
+      }
+    } catch {
+      // A failed session request can be a network outage; retain the player and retry.
+    }
+    if (ws === socket && self && !loggingOut) {
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      reconnectTimer = setTimeout(connect, 2500);
+    }
   };
   ws.onerror = () => {
     connecting = false;
@@ -155,9 +259,12 @@ function connect() {
 }
 function snapshot(s: Snapshot) {
   self = s.self;
+  scene.focused = !panel && !dialogue.isOpen;
   others = s.players;
   scene.updatePlayers(s.self, s.players);
   scene.updateEntities(s.entities);
+  dialogue.refresh();
+  updateCombat(s);
   $("#welcome").hidden = true;
   $(".landing-coordinate").hidden = true;
   $("#game-ui").hidden = false;
@@ -168,9 +275,9 @@ function snapshot(s: Snapshot) {
   $("#stamina-bar").style.width =
     `${(100 * s.self.stamina) / s.self.maxStamina}%`;
   $("#stamina-label").textContent =
-    `Выносливость ${Math.floor(s.self.stamina)}`;
+    `Тонус ${Math.floor(s.self.stamina)} / ${s.self.maxStamina}`;
   $("#credits").textContent = `${s.self.credits.toLocaleString("ru-RU")} кр.`;
-  $("#online").textContent = `${s.players.length + 1} в сети`;
+  $("#online").textContent = `${s.online ?? s.players.length + 1} в сети`;
   const signature = s.messages.map((m) => m.id).join();
   if (signature !== lastChat) {
     lastChat = signature;
@@ -191,7 +298,7 @@ function snapshot(s: Snapshot) {
     $("#quest-text").textContent =
       progress >= 2
         ? "Боб благодарен за помощь. Добывай руду, осваивай ремёсла и собирай снаряжение для вылазок."
-        : "Принеси Бобу 5 единиц любой руды. Месторождения находятся к востоку от колонии.";
+        : "Принеси Бобу 5 единиц любой руды. Олово можно добывать с первого уровня геологии. Боб подскажет координаты.";
   }
   const changed = JSON.stringify([
     panel,
@@ -202,7 +309,8 @@ function snapshot(s: Snapshot) {
     s.self.equipped,
     s.self.equipment,
     s.self.mode,
-    s.self.quest,
+    Object.fromEntries(Object.entries(s.self.quest).filter(([key]) => key !== "recoveryMs" && key !== "runDistance")),
+    Math.floor(s.self.force),
     s.self.credits,
     s.self.clan,
   ]);
@@ -253,7 +361,10 @@ $("#chat-form").onsubmit = (e) => {
   input.blur();
 };
 function interaction() {
-  const e = scene.nearest();
+  interactEntity(scene.nearest());
+}
+function interactEntity(e?: Entity) {
+  if (dialogue.isOpen) return;
   if (!e) {
     toast("Подойди к жителю, мастерской или ресурсу.");
     return;
@@ -262,20 +373,16 @@ function interaction() {
   if (e.type === "resource" || e.type === "loot")
     action("gather", { target: e.id });
   else if (e.type === "monster") {
-    scene.triggerAttack(e);
-    action("attack", { target: e.id });
+    action("engage", { target: e.id });
   } else if (e.type === "npc") {
-    if (e.id === "bank") openPanel("bank");
-    else {
-      action("talk", { target: e.id });
-      if (/trader|shop|merchant/i.test(e.id)) openPanel("shop");
-    }
+    dialogue.open(e);
   } else if (e.type === "station") {
     if (/bank/i.test(e.id)) openPanel("bank");
     else openPanel("craft");
   }
 }
 function attack() {
+  if (dialogue.isOpen || panel) return;
   const e = scene.entities
     .filter((e) => e.type === "monster" && e.alive !== false)
     .sort(
@@ -284,8 +391,7 @@ function attack() {
         Math.hypot(b.x - scene.player.x, b.z - scene.player.z),
     )[0];
   if (e && Math.hypot(e.x - scene.player.x, e.z - scene.player.z) < 4.5) {
-    scene.triggerAttack(e);
-    action("attack", { target: e.id });
+    action("engage", { target: e.id });
   } else toast("Для атаки подойди к противнику.");
 }
 function heal() {
@@ -295,14 +401,24 @@ function heal() {
   if (food) action("use", { item: food });
   else toast("В инвентаре нет еды. Её можно приготовить или купить.");
 }
-scene.onMove = (x, z, rotation) => send({ type: "move", x, z, rotation });
+scene.onMove = (x, z, rotation, running) => send({ type: "move", x, z, rotation, running });
+scene.onEntityClick = interactEntity;
+scene.onNavigate = () => {
+  if (self?.combatTarget) action("disengage");
+};
 scene.onInteract = interaction;
 scene.onAttack = attack;
 scene.onShortcut = (k) => {
   if (k === "escape") {
+    if (dialogue.isOpen) {
+      dialogue.close();
+      return;
+    }
+    if (self?.combatTarget) action("disengage");
     closePanel();
     return;
   }
+  if (dialogue.isOpen) return;
   openPanel(
     (
       {
@@ -316,7 +432,7 @@ scene.onShortcut = (k) => {
   );
 };
 window.addEventListener("keydown", (e) => {
-  if (scene.typing()) return;
+  if (scene.typing() || dialogue.isOpen) return;
   if (e.key === "2") heal();
   if (e.key === "Enter" && self) {
     e.preventDefault();
@@ -324,7 +440,7 @@ window.addEventListener("keydown", (e) => {
   }
 });
 $("#find-bob").onclick = () => {
-  const bob = scene.entities.find((e) => e.id === "bob");
+  const bob = world.entities.find((e) => e.role === "bob" || /bob|боб/i.test(e.id + e.name));
   if (bob) {
     scene.destination = { x: bob.x, z: bob.z };
     toast("Идём к Бобу. WASD отменяет маршрут.");
@@ -348,6 +464,7 @@ $("#panel-backdrop").addEventListener("click", (e) => {
   if (e.target === $("#panel-backdrop")) closePanel();
 });
 function openPanel(name: string) {
+  dialogue.close();
   lastPanelState = "";
   panel = name;
   scene.destination = undefined;
@@ -358,7 +475,7 @@ function openPanel(name: string) {
 }
 function closePanel() {
   panel = "";
-  scene.focused = true;
+  scene.focused = !!self;
   $("#panel-backdrop").hidden = true;
 }
 function inventoryRows(
@@ -431,7 +548,7 @@ function renderPanel() {
       content.innerHTML = "<p>Характеристики доступны после входа.</p>";
       return;
     }
-    content.innerHTML = `<div class="character-summary"><span class="character-emblem">◈</span><div><h3>${esc(self.name)}</h3><p>Уровень ${self.level} · ${self.xp} опыта · репутация PK ${self.pk}</p></div></div><div class="stat-grid">${Object.entries(
+    content.innerHTML = `<div class="character-summary"><span class="character-emblem">◈</span><div><h3>${esc(self.name)}</h3><p>Боевой уровень ${self.level} · репутация PK ${self.pk}</p></div></div><div class="stat-grid">${Object.entries(
       self.stats,
     )
       .map(
@@ -451,10 +568,16 @@ function renderPanel() {
       )
       .join(
         "",
-      )}</div><h3 class="section-title">Форс · ${Math.floor(self.force)} / 100</h3><div class="mode-options force-options">${["Выключен", "Регенерация", "Точность", "Реакция", "Защита", "Шок", "Берсерк", "Оборона", "Нападение", "Форс-защита"].map((name, n) => `<button data-force="${n}" class="${(self!.quest.forceMode || 0) === n ? "selected" : ""}">${name}</button>`).join("")}</div><h3 class="section-title">Профессии и боевые навыки</h3><div class="skill-grid">${world.professions.map((s) => `<div class="skill"><div><strong>${esc(s.name)}</strong><span>${self!.skills[s.id] || 1}</span></div><p>${esc(s.description)}</p><div class="skill-track"><i style="width:${Math.min(100, (self!.skills[s.id] || 1) * 5)}%"></i></div></div>`).join("")}</div>`;
+      )}</div><h3 class="section-title">Форс · ${Math.floor(self.force)} / ${self.maxForce ?? 100}</h3><div class="mode-options force-options">${["Выключен", "Регенерация", "Точность", "Реакция", "Защита", "Шок", "Берсерк", "Оборона", "Нападение", "Форс-защита"].map((name, n) => `<button data-force="${n}" class="${(self!.quest.forceMode || 0) === n ? "selected" : ""}">${name}</button>`).join("")}</div><h3 class="section-title">Профессии и боевые навыки</h3><div class="skill-grid">${world.professions.map((s) => `<div class="skill"><div><strong>${esc(s.name)}</strong><span>${self!.skills[s.id] || 1}</span></div><p>${esc(s.description)}</p><small>${skillProgress(s.id).label}</small><div class="skill-track"><i style="width:${skillProgress(s.id).percent}%"></i></div></div>`).join("")}</div>`;
   } else if (panel === "map") {
-    content.innerHTML = `<p class="panel-intro">Начальная область вокруг Фармуна. Полная карта оригинального мира ещё восстанавливается.</p><div class="big-map"><canvas id="world-map" width="660" height="430"></canvas></div><div class="map-legend"><span>◆ Поселение</span><span>● Ресурсы</span><span>▲ Противники</span><span>◎ Ты</span></div>`;
+    content.innerHTML = `<p class="panel-intro">Мир AWPlanet: полная сетка 512 × 512. Отметки показывают жителей, мастерские, ресурсы и противников. Щёлкни по карте, чтобы проложить маршрут.</p><div class="big-map"><canvas id="world-map" width="660" height="430"></canvas></div><div class="map-legend"><span>◆ Жители и мастерские</span><span>● Ресурсы</span><span>▲ Противники</span><span>◎ Ты</span></div>`;
     drawMap($("#world-map"), true);
+    $("#world-map").onclick = (event) => {
+      const canvas = $<HTMLCanvasElement>("#world-map"), rect = canvas.getBoundingClientRect(), scale = Math.min(canvas.width, canvas.height) / 540;
+      const x = ((event.clientX - rect.left) / rect.width * canvas.width - canvas.width / 2) / scale;
+      const z = ((event.clientY - rect.top) / rect.height * canvas.height - canvas.height / 2) / scale;
+      closePanel(); scene.moveTo(x, z);
+    };
   } else if (panel === "bank") {
     content.innerHTML = `<p class="panel-intro">Храни ресурсы перед вылазкой. Банковские предметы сохраняются после выхода и гибели. Операции доступны рядом с терминалом банка.</p><h3 class="section-title">С собой</h3>${inventoryRows(self?.inventory || {}, (id) => `<button data-action="bankDeposit" data-item="${esc(id)}">Положить 1</button><button data-action="bankDeposit" data-item="${esc(id)}" data-quantity="${self?.inventory[id]}">Всё</button>`)}<h3 class="section-title">В хранилище</h3>${inventoryRows(self?.bank || {}, (id) => `<button data-action="bankWithdraw" data-item="${esc(id)}">Забрать 1</button>`)}`;
   } else if (panel === "shop") {
@@ -477,7 +600,7 @@ function renderPanel() {
         "",
       )}</select></label><label>Количество<input type="number" name="quantity" value="1" min="1" max="999" required></label><button>Передать</button></form><p class="small-note">Передача — подарок. Встречный обмен с подтверждением обеих сторон ещё в разработке.</p><button id="logout" class="quiet">Выйти из аккаунта</button>`;
   } else {
-    content.innerHTML = `<div class="guide-hero"><span>01</span><h3>Планета помнит.</h3><p>AWPlanet — мир колоний, профессий и людей. Это независимая фанатская реконструкция. Здесь начинаем с одной живой области и постепенно возвращаем мир.</p></div><div class="guide-grid"><article><kbd>WASD</kbd><h3>Исследуй</h3><p>Shift для бега. Потяни мышью, чтобы повернуть камеру. Колесо меняет расстояние. Двойной клик по земле или клик по мини-карте задаёт маршрут. Подойди к объекту и нажми E.</p></article><article><kbd>E</kbd><h3>Зарабатывай опытом</h3><p>Собирай древесину, руду, растения и рыбу. В мастерских плавь металл, готовь еду и изготавливай оружие.</p></article><article><kbd>1</kbd><h3>Будь готов к бою</h3><p>Надень оружие в инвентаре. Подойди к противнику и нажми 1 или пробел. Еда восстанавливает здоровье.</p></article><article><kbd>I</kbd><h3>Береги находки</h3><p>Сдай ценные материалы в банк. После гибели вещи могут остаться на месте боя, а часть опыта потеряется.</p></article></div><div class="development-note"><strong>Что сейчас доступно</strong><p>Общая зона, персонажи и чат, добыча, изготовление, PvE, снаряжение, банк, NPC-торговля, первый квест и сохранение. Данные каталога сверяются с оригиналом; баланс и начальная карта пока реконструированы. Точные формулы, все задания, подземелья, транспорт и полный обмен ещё требуют восстановления.</p><a href="https://github.com/WizardJIOCb/aw.xedoc.ru" target="_blank" rel="noopener">Исходный код и статус механик ↗</a></div>`;
+    content.innerHTML = `<div class="guide-hero"><span>01</span><h3>Планета помнит.</h3><p>AWPlanet — мир колоний, профессий и людей. Это независимая фанатская реконструкция. Карта и её население восстановлены по публичному клиенту Forever. История и механики мира продолжают возвращаться.</p></div><div class="guide-grid"><article><kbd>WASD</kbd><h3>Исследуй</h3><p>Shift для бега. Потяни мышью, чтобы повернуть камеру. Колесо меняет расстояние. Клик по земле или мини-карте задаёт маршрут. Клик по противнику запускает бой. ПКМ поворачивает камеру. Подойди к объекту и нажми E.</p></article><article><kbd>E</kbd><h3>Зарабатывай опытом</h3><p>Собирай древесину, руду, растения и рыбу. В мастерских плавь металл, готовь еду и изготавливай оружие.</p></article><article><kbd>1</kbd><h3>Будь готов к бою</h3><p>Надень оружие в инвентаре. Подойди к противнику и нажми 1 или пробел. Еда восстанавливает здоровье.</p></article><article><kbd>I</kbd><h3>Береги находки</h3><p>Сдай ценные материалы в банк. После гибели вещи могут остаться на месте боя, а часть опыта потеряется.</p></article></div><div class="development-note"><strong>Что сейчас доступно</strong><p>Общая зона, персонажи и чат, добыча, изготовление, PvE, снаряжение, банк, NPC-торговля, первый квест и сохранение. Данные каталога сверяются с оригиналом; часть баланса пока реконструирована. Все старые задания, переходы в подземелья, транспорт, полный обмен и особые боевые эффекты ещё требуют восстановления.</p><a href="https://github.com/WizardJIOCb/aw.xedoc.ru" target="_blank" rel="noopener">Исходный код и статус механик ↗</a></div>`;
   }
   content.querySelectorAll<HTMLButtonElement>("[data-action]").forEach(
     (b) =>
@@ -542,11 +665,18 @@ function renderPanel() {
   const logout = content.querySelector<HTMLButtonElement>("#logout");
   if (logout)
     logout.onclick = async () => {
-      await api("/api/auth/logout", {});
-      self = undefined;
-      if (reconnectTimer) clearTimeout(reconnectTimer);
-      ws?.close();
-      location.reload();
+      loggingOut = true;
+      try {
+        await api("/api/auth/logout", {});
+        self = undefined;
+        if (reconnectTimer) clearTimeout(reconnectTimer);
+        ws?.close();
+        location.reload();
+      } catch (error) {
+        loggingOut = false;
+        toast((error as Error).message, "error");
+        if (ws?.readyState === WebSocket.CLOSED) connect();
+      }
     };
 }
 function stationName(s: string) {
@@ -567,6 +697,13 @@ function stationName(s: string) {
     )[s] || s
   );
 }
+let mapBackground: HTMLCanvasElement | undefined;
+function skillProgress(id: string) {
+  const level = self?.skills[id] ?? 1, xp = self?.quest[`skillXp:${id}`] ?? xpForLevel(level),
+    start = xpForLevel(level), next = nextLevelXp(level);
+  return next === null ? { percent: 100, label: "Максимальный уровень" } :
+    { percent: Math.min(100, Math.max(0, (xp - start) / (next - start) * 100)), label: `${Math.max(0, xp - start)} / ${next - start} опыта до уровня ${level + 1}` };
+}
 function drawMap(canvas: HTMLCanvasElement, large = false) {
   const ctx = canvas.getContext("2d")!,
     w = canvas.width,
@@ -574,16 +711,31 @@ function drawMap(canvas: HTMLCanvasElement, large = false) {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "#172c29";
   ctx.fillRect(0, 0, w, h);
-  const scale = large ? 2.2 : 1.2,
+  const scale = large ? Math.min(w, h) / 540 : 2,
     cx = large ? 0 : scene.player.x,
     cz = large ? 0 : scene.player.z;
   const xy = (x: number, z: number) => [
     w / 2 + (x - cx) * scale,
     h / 2 + (z - cz) * scale,
   ];
+  if (!mapBackground) {
+    mapBackground = document.createElement("canvas"); mapBackground.width = mapBackground.height = 512;
+    const context = mapBackground.getContext("2d")!, pixels = context.createImageData(512, 512);
+    const palette = [[143,125,83],[123,113,76],[80,107,62],[77,100,65],[48,77,69],[106,103,90],[82,88,82],[63,89,85]];
+    for (let index = 0; index < canonicalMap.terrain.length; index++) {
+      const tile = (canonicalMap.terrain[index] >>> 8) & 255;
+      const colour = tile >= 128 ? (tile & 15) >= 8 ? [126,130,117] : [139,116,86] : palette[(tile >>> 4) & 7];
+      const offset = ((index % 512) * 512 + Math.floor(index / 512)) * 4;
+      pixels.data.set([...colour, 255], offset);
+    }
+    context.putImageData(pixels, 0, 0);
+  }
+  const origin = xy(-256, -256);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(mapBackground, origin[0], origin[1], 512 * scale, 512 * scale);
   ctx.strokeStyle = "#2b4238";
   ctx.lineWidth = 1;
-  for (let n = -120; n <= 120; n += 20) {
+  for (let n = -256; n <= 256; n += 32) {
     const [x] = xy(n, 0),
       [, y] = xy(0, n);
     ctx.beginPath();
@@ -593,19 +745,7 @@ function drawMap(canvas: HTMLCanvasElement, large = false) {
     ctx.lineTo(w, y);
     ctx.stroke();
   }
-  ctx.strokeStyle = "#759078";
-  ctx.lineWidth = large ? 9 : 4;
-  ctx.beginPath();
-  let [x, y] = xy(0, -40);
-  ctx.moveTo(x, y);
-  [x, y] = xy(0, 65);
-  ctx.lineTo(x, y);
-  [x, y] = xy(-45, -7);
-  ctx.moveTo(x, y);
-  [x, y] = xy(50, -7);
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  for (const e of scene.entities.length ? scene.entities : world.entities) {
+  for (const e of large ? world.entities : scene.entities.length ? scene.entities : world.entities) {
     if (e.alive === false || e.stock === 0) continue;
     const [x, y] = xy(e.x, e.z);
     ctx.fillStyle =
@@ -615,21 +755,16 @@ function drawMap(canvas: HTMLCanvasElement, large = false) {
           ? "#79a07b"
           : "#ded8a0";
     ctx.beginPath();
-    ctx.arc(x, y, e.type === "resource" ? 2 : 3, 0, Math.PI * 2);
+    ctx.arc(x, y, large ? e.type === "npc" ? 1.8 : 1 : e.type === "resource" ? 2 : 3, 0, Math.PI * 2);
     ctx.fill();
   }
   if (large) {
     ctx.font = "12px sans-serif";
     ctx.fillStyle = "#d4d6b4";
-    for (const [name, x, z] of [
-      ["ФАРМУН", 0, -22],
-      ["ЛЕС", -38, 44],
-      ["РУДНИК", 43, -57],
-      ["ПОЛЯ", 21, 34],
-      ["ПУСТОШЬ", 69, 54],
-    ] as const) {
-      const p = xy(x, z);
-      ctx.fillText(name, p[0] - 30, p[1]);
+    const bob = world.entities.find(e => e.role === "bob");
+    if (bob) {
+      const p = xy(bob.x, bob.z);
+      ctx.fillText("БОБ", p[0] + 4, p[1] - 6);
     }
   }
   const p = xy(scene.player.x, scene.player.z);
@@ -644,7 +779,7 @@ function drawMap(canvas: HTMLCanvasElement, large = false) {
 }
 setInterval(() => {
   const e = scene.nearest();
-  $("#interaction").hidden = !e || !self || !!panel;
+  $("#interaction").hidden = !e || !self || !!panel || dialogue.isOpen;
   if (e) {
     $("#interaction-name").textContent = e.name;
     $("#interaction-verb").textContent =
@@ -652,7 +787,7 @@ setInterval(() => {
         {
           resource: "Собрать ресурс",
           monster: `Атаковать · ${e.hp || 0} / ${e.maxHp || 0} HP`,
-          npc: e.id === "bank" ? "Открыть банк" : "Поговорить",
+          npc: e.role === "bank" ? "Открыть банк" : "Поговорить",
           station: "Открыть мастерскую",
           loot: "Подобрать добычу",
         } as Record<string, string>
@@ -660,16 +795,8 @@ setInterval(() => {
   }
   $("#coords").textContent =
     `${Math.round(scene.player.x)} : ${Math.round(scene.player.z)}`;
-  const distance = Math.hypot(scene.player.x, scene.player.z);
-  const safe = Math.hypot(scene.player.x, scene.player.z - 8) < 24;
-  $("#zone").textContent =
-    distance < 30
-      ? "ФАРМУН"
-      : scene.player.x < -20
-        ? "ЛЕС КОЛОНИИ"
-        : scene.player.z < -25
-          ? "РУДНИК"
-          : "ПУСТОШЬ";
+  const safe = Math.hypot(scene.player.x - canonicalMap.spawn.x, scene.player.z - canonicalMap.spawn.z) < 12;
+  $("#zone").textContent = safe ? "КОЛОНИЯ" : "МИР AWPLANET";
   $(".tiny").textContent = safe ? "БЕЗОПАСНАЯ ЗОНА" : "ДИКАЯ МЕСТНОСТЬ";
   drawMap($("#minimap"));
 }, 200);
@@ -680,10 +807,10 @@ $("#minimap").onclick = (e) => {
   scene.destination = {
     x:
       scene.player.x +
-      (((e.clientX - r.left) / r.width) * c.width - c.width / 2) / 1.2,
+      (((e.clientX - r.left) / r.width) * c.width - c.width / 2) / 2,
     z:
       scene.player.z +
-      (((e.clientY - r.top) / r.height) * c.height - c.height / 2) / 1.2,
+      (((e.clientY - r.top) / r.height) * c.height - c.height / 2) / 2,
   };
 };
 async function init() {

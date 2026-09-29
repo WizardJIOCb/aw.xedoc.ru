@@ -2,6 +2,76 @@
 .force-options {
   flex-wrap: wrap;
 }
+.npc-dialogue {
+  padding: 0;
+  border: 1px solid rgba(210,193,139,.32);
+  border-radius: 16px;
+  width: min(900px, calc(100vw - 48px));
+  max-height: calc(100dvh - 64px);
+  color: #ece8d8;
+  background: #142320;
+  overflow: hidden;
+  box-shadow: 0 36px 130px #000b, inset 0 0 0 5px #ffffff03;
+  animation: dialogue-arrive .22s ease-out;
+}
+.npc-dialogue::backdrop { background: #07100bd4; backdrop-filter: blur(6px) saturate(.65); }
+.dialogue-shell { display: grid; grid-template-columns: 34% 66%; min-height: 500px; }
+.dialogue-portrait { position: relative; background-size: cover; background-position: 50% 33%; border-right: 1px solid #cfc29420; }
+.dialogue-portrait::after { content:""; position: absolute; inset: 0; background: linear-gradient(0deg,#071a18 0%,transparent 45%),linear-gradient(90deg,transparent 70%,#142320); }
+.portrait-colony { background: radial-gradient(ellipse at 50% 30%,#638074 0,#243b33 32%,#10241f 72%); }
+.portrait-colony::before { content:"◈"; position:absolute; inset: 15% 0 auto; text-align:center; color:#d4bd82; font-size:110px; opacity:.7; }
+.portrait-caption { position:absolute; bottom:32px; left:26px; right:20px; z-index:1; }
+.portrait-caption span { font-size:9px; letter-spacing:2px; color:#cfbc87; display:block; }
+.portrait-caption strong { display:block; margin-top:9px; font-size:30px; letter-spacing:5px; font-weight:500; }
+.dialogue-body { padding:32px 36px 20px; }
+.dialogue-body header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.dialogue-eyebrow { font-size:9px; letter-spacing:1.8px; color:#c8b785; font-weight:700; }
+.dialogue-body h2 { font-family: Unbounded, sans-serif; font-size:23px; line-height:1.5; margin-top:8px; font-weight:500; }
+.dialogue-close { border:0; background:transparent; font-size:16px; padding:4px 0 8px 12px; opacity:.65; }
+.dialogue-line { position:relative; min-height:120px; padding:28px 0 25px; }
+.quote-mark { position:absolute; left:-22px; top:16px; font-family:Georgia,serif; font-size:42px; color:#c8b78540; }
+.dialogue-line p { font-size:15px; line-height:1.85; color:#d4d8c9; }
+.dialogue-quest { display:grid; grid-template-columns:1fr auto; gap:25px; padding:18px 20px; margin-bottom:22px; border:1px solid #c8b78526; background:#d4bd8208; border-radius:8px; }
+.dialogue-quest strong { display:block; font-size:14px; margin:8px 0; }
+.dialogue-quest p { color:#9eaea2; font-size:11px; }
+.dialogue-quest p b { float:right; font-weight:500; color:#d4bd82; margin-left:18px; }
+.quest-progress { height:3px; margin-top:9px; background:#c8b7851a; border-radius:3px; overflow:hidden; }
+.quest-progress i { display:block; height:100%; background:#cbbb7e; }
+.dialogue-quest aside { border-left:1px solid #c8b78526; padding-left:22px; }
+.dialogue-quest aside span { display:block; color:#a4b4a8; font-size:10px; }
+.dialogue-quest aside strong { font-size:23px; color:#d9c693; }
+.dialogue-quest aside small { font-size:10px; color:#a4b4a8; }
+.dialogue-choices { display:grid; gap:8px; }
+.dialogue-choice { display:flex; width:100%; justify-content:space-between; align-items:center; text-align:left; gap:12px; padding:13px 16px; font-size:12px; background:#b7c9b708; border-color:#b7c9b719; }
+.dialogue-choice b { font-size:17px; font-weight:400; color:#c6b687; }
+.dialogue-choice.primary-choice { background:#c7b07812; border-color:#c7b07855; color:#e6d3a3; }
+.dialogue-choice:hover { background:#c7b07822; border-color:#c7b07880; }
+.dialogue-body footer { display:flex; justify-content:space-between; margin-top:24px; font-size:8px; color:#82958a; letter-spacing:1px; }
+.combat-target { position:absolute; left:50%; transform:translateX(-50%); top:95px; width:240px; padding:16px 22px; background:#1a211def; border:1px solid #9c67564d; border-radius:8px; box-shadow:0 10px 40px #0004; }
+.combat-target strong { display:block; text-align:center; font-size:14px; margin:7px 0 11px; }
+.combat-target .dialogue-eyebrow { color:#be9380; display:block; text-align:center; }
+.combat-target button { position:absolute; top:7px; right:8px; background:none; border:0; padding:0; font-size:10px; }
+.enemy-health { height:13px; position:relative; background:#0b110f; border-radius:2px; overflow:hidden; }
+.enemy-health i { display:block; height:100%; background:linear-gradient(90deg,#944638,#c28b57); transition:width .15s; }
+.enemy-health span { position:absolute; inset:0; text-align:center; font-size:9px; line-height:13px; }
+.damage-number { pointer-events:none; position:absolute; transform:translate(-50%,-50%); color:#ffdb94; text-shadow:0 2px 3px #000; font-size:22px; font-weight:800; animation:damage-rise 1s ease-out forwards; }
+.damage-number.incoming { color:#ff8070; }
+@keyframes damage-rise { to { opacity:0; transform:translate(-50%,-230%); } }
+@keyframes dialogue-arrive { from { opacity:0; transform:translateY(12px) scale(.98); } }
+@media (max-width:700px) {
+  .npc-dialogue { width:calc(100vw - 24px); max-height:calc(100dvh - 24px); overflow-y:auto; }
+  .dialogue-shell { grid-template-columns:1fr; min-height:unset; }
+  .dialogue-portrait { min-height:140px; background-position:50% 24%; background-size:cover; }
+  .portrait-caption { left:20px; bottom:14px; }
+  .portrait-caption strong { font-size:20px; }
+  .dialogue-body { padding:22px 25px; }
+  .dialogue-body h2 { font-size:19px; }
+  .dialogue-line { min-height:unset; }
+  .dialogue-line p { font-size:13px; }
+  .dialogue-quest { padding:14px; gap:12px; }
+  .dialogue-quest aside { padding-left:12px; }
+  .combat-target { top:88px; width:190px; padding:12px; }
+}
 :root {
   font-family: Manrope, Arial, sans-serif;
   color: #eef0da;

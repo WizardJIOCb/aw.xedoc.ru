@@ -1,6 +1,6 @@
 {
   "name": "aw-xedoc-ru",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "tsc --noEmit && vite build",
     "start": "tsx server/index.ts",
-    "test": "tsx --test server/*.test.ts",
+    "test": "tsx --test server/*.test.ts src/client/*.test.ts",
     "check": "tsc --noEmit"
   },
   "dependencies": {

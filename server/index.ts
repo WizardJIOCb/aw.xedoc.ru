@@ -8,6 +8,8 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import bcrypt from "bcryptjs";
 import type { WorldData } from "../src/shared/types.js";
+import type { CanonicalMapData } from "../src/shared/canonical-map.js";
+import { populateCanonicalWorld } from "./canonical-world.js";
 import { Game, GameError, type ActionMessage } from "./game.js";
 import { JsonStore } from "./persist.js";
 
@@ -36,11 +38,13 @@ function cookies(header?: string): Record<string, string> {
 export async function buildServer(
   options: { world?: WorldData; stateFile?: string; timers?: boolean } = {},
 ) {
-  const world =
+  const map: CanonicalMapData | undefined = options.world ? undefined : JSON.parse(await readFile(resolve(root, "data/canonical-map.json"), "utf8"));
+  const sourceWorld =
     options.world ??
     (JSON.parse(
       await readFile(resolve(root, "data/world.json"), "utf8"),
     ) as WorldData);
+  const world = map ? populateCanonicalWorld(sourceWorld, map) : sourceWorld;
   if (
     !Array.isArray(world.items) ||
     !Array.isArray(world.recipes) ||
@@ -87,6 +91,7 @@ export async function buildServer(
     () => {
       dirty = true;
     },
+    map,
   );
   const app = express();
   app.disable("x-powered-by");
@@ -124,7 +129,7 @@ export async function buildServer(
         return true;
       return (
         process.env.NODE_ENV !== "production" &&
-        /^(localhost|127\.0\.0\.1):(5173|5188)$/.test(host)
+        /^(localhost|127\.0\.0\.1):(5173|5188|5190)$/.test(host)
       );
     } catch {
       return false;
@@ -256,21 +261,27 @@ export async function buildServer(
   app.get("/api/world", (_req, res) => {
     res.json({ ...world, entities: world.entities });
   });
+  app.get("/api/map", (_req, res) => {
+    if (!map) { res.status(404).json({ error: "Карта не задана." }); return; }
+    res.json(map);
+  });
   app.get("/api/health", (_req, res) => {
-    res
-      .status(saveError ? 503 : 200)
-      .json({
-        ok: !saveError,
-        service: "aw-xedoc",
-        version: "0.1.0",
-        sourceCommit: process.env.SOURCE_COMMIT ?? "development",
-        online: clients.size,
-        players: Object.keys(state.players).length,
-        items: world.items.length,
-        recipes: world.recipes.length,
-        persistence: saveError ?? "ok",
-        uptime: Math.floor(process.uptime()),
-      });
+    res.status(saveError ? 503 : 200).json({
+      ok: !saveError,
+      service: "aw-xedoc",
+      version: "0.2.0",
+      simulationHz: 2,
+      snapshotHz: 5,
+      progression: "forever-v1",
+      map: map ? { cells: map.terrain.length, placements: map.placements.length, types: map.definitions.length, activeEntities: world.entities.length, sourceSha256: map.sha256 } : null,
+      sourceCommit: process.env.SOURCE_COMMIT ?? "development",
+      online: clients.size,
+      players: Object.keys(state.players).length,
+      items: world.items.length,
+      recipes: world.recipes.length,
+      persistence: saveError ?? "ok",
+      uptime: Math.floor(process.uptime()),
+    });
   });
   app.use("/api", (_req, res) => {
     res.status(404).json({ error: "Метод не найден." });
@@ -377,12 +388,13 @@ export async function buildServer(
             x?: unknown;
             z?: unknown;
             rotation?: unknown;
+            running?: unknown;
             text?: unknown;
           };
           if (!message || typeof message !== "object")
             throw new GameError("Некорректное сообщение.");
           if (message.type === "move")
-            game.move(id, message.x, message.z, message.rotation);
+            game.move(id, message.x, message.z, message.rotation, message.running === true);
           else if (message.type === "action") game.action(id, message);
           else if (message.type === "chat") game.chat(id, message.text);
           else throw new GameError("Неизвестный тип сообщения.");
@@ -411,8 +423,7 @@ export async function buildServer(
       });
     });
   });
-  const tick = () => {
-    game.tick();
+  const broadcast = () => {
     for (const [id, sockets] of clients) {
       const snapshot = JSON.stringify(game.snapshot(id));
       for (const ws of sockets) {
@@ -427,8 +438,16 @@ export async function buildServer(
       }
     }
   };
+  const tick = () => {
+    game.tick();
+    broadcast();
+  };
+  // Forever's update loop and Von Raven's 2010 Classic interview both confirm
+  // a 0.5-second world step. Client snapshots use a separate, smoother cadence.
   const tickTimer =
-    options.timers === false ? undefined : setInterval(tick, 200);
+    options.timers === false ? undefined : setInterval(() => game.tick(), 500);
+  const snapshotTimer =
+    options.timers === false ? undefined : setInterval(broadcast, 200);
   const saveTimer =
     options.timers === false
       ? undefined
@@ -446,10 +465,12 @@ export async function buildServer(
           void checkpoints().catch(() => {});
         }, 15000);
   tickTimer?.unref();
+  snapshotTimer?.unref();
   saveTimer?.unref();
   fullSaveTimer?.unref();
   const close = async () => {
     if (tickTimer) clearInterval(tickTimer);
+    if (snapshotTimer) clearInterval(snapshotTimer);
     if (saveTimer) clearInterval(saveTimer);
     if (fullSaveTimer) clearInterval(fullSaveTimer);
     for (const ws of wss.clients) ws.terminate();
@@ -472,11 +493,12 @@ if (
   realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
 ) {
   const running = await buildServer();
-  const port = Number(process.env.PORT ?? 3188);
+  const port = Number(process.env.PORT ?? 3190);
   const host = process.env.HOST ?? "127.0.0.1";
   running.server.listen(port, host, () => {
     const address = running.server.address();
-    const listeningPort = address && typeof address === "object" ? address.port : port;
+    const listeningPort =
+      address && typeof address === "object" ? address.port : port;
     console.log(`AW world listening on http://${host}:${listeningPort}`);
   });
   let stopping = false;

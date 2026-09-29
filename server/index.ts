@@ -312,7 +312,13 @@ export async function buildServer(
   const server = httpServer(app);
   const wss = new WebSocketServer({ noServer: true, maxPayload: 8192 });
   server.on("upgrade", (req, socket, head) => {
-    const pathname = new URL(req.url ?? "/", "http://localhost").pathname;
+    let pathname: string;
+    try {
+      pathname = new URL(req.url ?? "/", "http://localhost").pathname;
+    } catch {
+      socket.end("HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n");
+      return;
+    }
     const session = sessionFor(req);
     if (pathname !== "/ws" || !session || !allowedOrigin(req)) {
       socket.end("HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n");

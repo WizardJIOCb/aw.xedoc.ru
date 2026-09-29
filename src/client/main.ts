@@ -206,11 +206,7 @@ function snapshot(s: Snapshot) {
     s.self.credits,
     s.self.clan,
   ]);
-  if (
-    panel &&
-    changed !== lastPanelState &&
-    !$("#panel-content").contains(document.activeElement)
-  ) {
+  if (panel && changed !== lastPanelState && !scene.typing()) {
     lastPanelState = changed;
     renderPanel();
   }
@@ -356,11 +352,13 @@ function openPanel(name: string) {
   panel = name;
   scene.destination = undefined;
   scene.keys.clear();
+  scene.focused = false;
   $("#panel-backdrop").hidden = false;
   renderPanel();
 }
 function closePanel() {
   panel = "";
+  scene.focused = true;
   $("#panel-backdrop").hidden = true;
 }
 function inventoryRows(
@@ -481,19 +479,17 @@ function renderPanel() {
   } else {
     content.innerHTML = `<div class="guide-hero"><span>01</span><h3>Планета помнит.</h3><p>AWPlanet — мир колоний, профессий и людей. Это независимая фанатская реконструкция. Здесь начинаем с одной живой области и постепенно возвращаем мир.</p></div><div class="guide-grid"><article><kbd>WASD</kbd><h3>Исследуй</h3><p>Shift для бега. Потяни мышью, чтобы повернуть камеру. Колесо меняет расстояние. Двойной клик по земле или клик по мини-карте задаёт маршрут. Подойди к объекту и нажми E.</p></article><article><kbd>E</kbd><h3>Зарабатывай опытом</h3><p>Собирай древесину, руду, растения и рыбу. В мастерских плавь металл, готовь еду и изготавливай оружие.</p></article><article><kbd>1</kbd><h3>Будь готов к бою</h3><p>Надень оружие в инвентаре. Подойди к противнику и нажми 1 или пробел. Еда восстанавливает здоровье.</p></article><article><kbd>I</kbd><h3>Береги находки</h3><p>Сдай ценные материалы в банк. После гибели вещи могут остаться на месте боя, а часть опыта потеряется.</p></article></div><div class="development-note"><strong>Что сейчас доступно</strong><p>Общая зона, персонажи и чат, добыча, изготовление, PvE, снаряжение, банк, NPC-торговля, первый квест и сохранение. Данные каталога сверяются с оригиналом; баланс и начальная карта пока реконструированы. Точные формулы, все задания, подземелья, транспорт и полный обмен ещё требуют восстановления.</p><a href="https://github.com/WizardJIOCb/aw.xedoc.ru" target="_blank" rel="noopener">Исходный код и статус механик ↗</a></div>`;
   }
-  content
-    .querySelectorAll<HTMLButtonElement>("[data-action]")
-    .forEach(
-      (b) =>
-        (b.onclick = () =>
-          action(b.dataset.action!, {
-            item: b.dataset.item,
-            recipe: b.dataset.recipe,
-            quantity: Number(b.dataset.quantity || 1),
-            value: b.dataset.value,
-            target: target?.id,
-          })),
-    );
+  content.querySelectorAll<HTMLButtonElement>("[data-action]").forEach(
+    (b) =>
+      (b.onclick = () =>
+        action(b.dataset.action!, {
+          item: b.dataset.item,
+          recipe: b.dataset.recipe,
+          quantity: Number(b.dataset.quantity || 1),
+          value: b.dataset.value,
+          target: target?.id,
+        })),
+  );
   content.querySelectorAll<HTMLButtonElement>("[data-player-attack]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -665,6 +661,7 @@ setInterval(() => {
   $("#coords").textContent =
     `${Math.round(scene.player.x)} : ${Math.round(scene.player.z)}`;
   const distance = Math.hypot(scene.player.x, scene.player.z);
+  const safe = Math.hypot(scene.player.x, scene.player.z - 8) < 24;
   $("#zone").textContent =
     distance < 30
       ? "ФАРМУН"
@@ -673,8 +670,7 @@ setInterval(() => {
         : scene.player.z < -25
           ? "РУДНИК"
           : "ПУСТОШЬ";
-  $(".tiny").textContent =
-    distance < 30 ? "БЕЗОПАСНАЯ ЗОНА" : "ДИКАЯ МЕСТНОСТЬ";
+  $(".tiny").textContent = safe ? "БЕЗОПАСНАЯ ЗОНА" : "ДИКАЯ МЕСТНОСТЬ";
   drawMap($("#minimap"));
 }, 200);
 $("#minimap").onclick = (e) => {

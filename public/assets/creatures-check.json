@@ -1,0 +1,116 @@
+[
+  {
+    "name": "chicken",
+    "restBounds": {
+      "min": [
+        -0.2836,
+        0.032,
+        -0.4603
+      ],
+      "max": [
+        0.2836,
+        0.894,
+        0.445
+      ],
+      "size": [
+        0.5672,
+        0.862,
+        0.9053
+      ]
+    },
+    "skinnedMeshes": 5,
+    "clips": [
+      {
+        "name": "Idle",
+        "duration": 2,
+        "maxExtent": 0.9086
+      },
+      {
+        "name": "Walk",
+        "duration": 1,
+        "maxExtent": 0.919
+      },
+      {
+        "name": "Attack",
+        "duration": 0.800000011920929,
+        "maxExtent": 0.9249
+      }
+    ]
+  },
+  {
+    "name": "rat",
+    "restBounds": {
+      "min": [
+        -0.2806,
+        0.007,
+        -1.0339
+      ],
+      "max": [
+        0.4458,
+        0.513,
+        0.6914
+      ],
+      "size": [
+        0.7265,
+        0.506,
+        1.7253
+      ]
+    },
+    "skinnedMeshes": 6,
+    "clips": [
+      {
+        "name": "Idle",
+        "duration": 2,
+        "maxExtent": 1.7358
+      },
+      {
+        "name": "Walk",
+        "duration": 1,
+        "maxExtent": 1.7396
+      },
+      {
+        "name": "Attack",
+        "duration": 0.800000011920929,
+        "maxExtent": 1.7253
+      }
+    ]
+  },
+  {
+    "name": "scorpion",
+    "restBounds": {
+      "min": [
+        -0.7289,
+        0.0202,
+        -0.5856
+      ],
+      "max": [
+        0.7289,
+        1.05,
+        0.9675
+      ],
+      "size": [
+        1.4578,
+        1.0298,
+        1.5531
+      ]
+    },
+    "skinnedMeshes": 5,
+    "clips": [
+      {
+        "name": "Idle",
+        "duration": 2,
+        "maxExtent": 1.5531
+      },
+      {
+        "name": "Walk",
+        "duration": 1,
+        "maxExtent": 1.553
+      },
+      {
+        "name": "Attack",
+        "duration": 0.800000011920929,
+        "maxExtent": 1.8537
+      }
+    ]
+  }
+]

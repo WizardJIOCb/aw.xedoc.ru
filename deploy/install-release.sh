@@ -155,7 +155,7 @@ systemctl restart aw-xedoc.service
 
 healthy=0
 for attempt in {1..25}; do
-    if curl --fail --silent --show-error --max-time 2 http://127.0.0.1:3188/api/health > "$health_file" 2>/dev/null \
+    if curl --noproxy '*' --fail --silent --show-error --max-time 2 http://127.0.0.1:3188/api/health > "$health_file" 2>/dev/null \
         && python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get("ok") is True and d.get("sourceCommit")==sys.argv[2] else 1)' "$health_file" "$commit"; then
         healthy=1; break
     fi
@@ -163,12 +163,30 @@ for attempt in {1..25}; do
 done
 [[ $healthy -eq 1 ]] || die 'New service did not report healthy with the requested SOURCE_COMMIT.'
 systemctl reload nginx
-# Initial HTTP works before the DNS change. Existing certbot redirects also work.
-curl --fail --silent --show-error --location --max-time 10 \
-    --resolve aw.xedoc.ru:80:127.0.0.1 --resolve aw.xedoc.ru:443:127.0.0.1 \
-    http://aw.xedoc.ru/api/health > "$health_file"
-python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get("ok") is True and d.get("sourceCommit")==sys.argv[2] else 1)' "$health_file" "$commit"
-curl --fail --silent --show-error --location --max-time 10 \
+# Reload is asynchronous: the first request may still reach the previous workers.
+# Give the AW virtual host a bounded 10-second window to report the exact release.
+nginx_health_file=$backup/nginx-health.json
+nginx_healthy=0
+nginx_deadline=$(( $(date +%s%3N) + 10000 ))
+while true; do
+    remaining_ms=$(( nginx_deadline - $(date +%s%3N) ))
+    [[ $remaining_ms -gt 0 ]] || break
+    request_ms=$remaining_ms
+    [[ $request_ms -le 1000 ]] || request_ms=1000
+    printf -v request_timeout '%d.%03d' "$(( request_ms / 1000 ))" "$(( request_ms % 1000 ))"
+    if curl --noproxy '*' --fail --silent --show-error --location --max-time "$request_timeout" \
+        --resolve aw.xedoc.ru:80:127.0.0.1 --resolve aw.xedoc.ru:443:127.0.0.1 \
+        http://aw.xedoc.ru/api/health > "$nginx_health_file" 2>/dev/null \
+        && python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get("ok") is True and d.get("sourceCommit")==sys.argv[2] else 1)' "$nginx_health_file" "$commit" 2>/dev/null; then
+        nginx_healthy=1; break
+    fi
+    remaining_ms=$(( nginx_deadline - $(date +%s%3N) ))
+    [[ $remaining_ms -gt 200 ]] || break
+    sleep 0.2
+done
+[[ $nginx_healthy -eq 1 ]] || die 'Nginx did not report healthy with the requested SOURCE_COMMIT within 10 seconds.'
+# Fetch the client only after the correct AW virtual host has passed health.
+curl --noproxy '*' --fail --silent --show-error --location --max-time 10 \
     --resolve aw.xedoc.ru:80:127.0.0.1 --resolve aw.xedoc.ru:443:127.0.0.1 \
     http://aw.xedoc.ru/ >/dev/null
 trap - ERR INT TERM EXIT

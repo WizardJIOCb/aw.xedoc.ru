@@ -58,6 +58,14 @@ export class PlanetScene {
   private houses: THREE.Group[] = [];
   private trees: THREE.Group[] = [];
   private entityMixers = new Map<string, THREE.AnimationMixer>();
+  private creatures = new Map<
+    string,
+    { model: THREE.Group; clips: THREE.AnimationClip[] }
+  >();
+  private creatureActions = new Map<
+    string,
+    { actions: Record<string, THREE.AnimationAction>; current: string }
+  >();
   private frameCount = 0;
   private frameAt = performance.now();
   constructor(public host: HTMLElement) {
@@ -67,7 +75,7 @@ export class PlanetScene {
     });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.1;
@@ -184,6 +192,16 @@ export class PlanetScene {
       undefined,
       () => {},
     );
+    void Promise.all(
+      ["chicken", "rat", "scorpion"].map(async (name) => {
+        try {
+          const g = await new GLTFLoader().loadAsync(
+            `/assets/${name}.glb?v=${__ASSET_VERSION__}`,
+          );
+          this.creatures.set(name, { model: g.scene, clips: g.animations });
+        } catch {}
+      }),
+    ).then(() => this.rebuildEntities());
     new GLTFLoader().load(
       `/assets/house.glb?v=${__ASSET_VERSION__}`,
       (g) => {
@@ -748,7 +766,9 @@ export class PlanetScene {
       this.yaw = 0.5;
       this.ready = true;
     }
-    const a = this.avatars.get(self.id) || this.avatar(self.id, self.x, self.z, self.rotation);
+    const a =
+      this.avatars.get(self.id) ||
+      this.avatar(self.id, self.x, self.z, self.rotation);
     if (this.player.distanceTo(new THREE.Vector3(self.x, 0, self.z)) > 3)
       this.player.set(self.x, 0, self.z);
     a.target.copy(this.player);
@@ -775,12 +795,33 @@ export class PlanetScene {
   }
   updateEntities(entities: Entity[]) {
     this.entities = entities;
+    const ids = new Set(entities.map((e) => e.id));
+    for (const [id, o] of this.objects) {
+      if (!ids.has(id)) {
+        this.scene.remove(o);
+        this.objects.delete(id);
+        this.entityMixers.delete(id);
+        this.creatureActions.delete(id);
+      }
+    }
     for (const e of entities) {
       let o = this.objects.get(e.id);
       if (!o) {
         o = this.entityObject(e);
         this.objects.set(e.id, o);
         this.scene.add(o);
+      }
+      const moved = Math.hypot(o.position.x - e.x, o.position.z - e.z) > 0.05;
+      if (moved && o.position.x !== 0 && o.position.z !== 0)
+        o.rotation.y = Math.atan2(e.x - o.position.x, e.z - o.position.z);
+      const animation = this.creatureActions.get(e.id);
+      if (animation) {
+        const state = moved ? "walk" : "idle";
+        if (animation.current !== state) {
+          animation.actions[animation.current]?.fadeOut(0.15);
+          animation.actions[state]?.reset().fadeIn(0.15).play();
+          animation.current = state;
+        }
       }
       o.position.set(e.x, 0, e.z);
       o.visible = e.alive !== false && e.stock !== 0;
@@ -790,13 +831,48 @@ export class PlanetScene {
     for (const o of this.objects.values()) this.scene.remove(o);
     this.objects.clear();
     this.entityMixers.clear();
+    this.creatureActions.clear();
     this.updateEntities(this.entities);
   }
   entityObject(e: Entity) {
     const g = new THREE.Group();
     g.userData.entityId = e.id;
     if (e.type === "monster") {
-      if (/drone|droid/i.test(e.id) && this.drone) {
+      const kind = /chicken|hen/.test(e.id)
+        ? "chicken"
+        : /scorpion/.test(e.id)
+          ? "scorpion"
+          : /rat/.test(e.id)
+            ? "rat"
+            : "";
+      const creature = this.creatures.get(kind);
+      if (creature) {
+        const model = clone(creature.model);
+        const b = new THREE.Box3().setFromObject(model);
+        const scale =
+          (
+            { chicken: 0.8, rat: 0.55, scorpion: 1.05 } as Record<
+              string,
+              number
+            >
+          )[kind] / Math.max(0.1, b.getSize(new THREE.Vector3()).y);
+        model.scale.setScalar(scale);
+        model.position.y = -b.min.y * scale;
+        model.traverse((o) => {
+          if (o instanceof THREE.Mesh) {
+            o.castShadow = true;
+            o.receiveShadow = true;
+          }
+        });
+        g.add(model);
+        const mixer = new THREE.AnimationMixer(model),
+          actions: Record<string, THREE.AnimationAction> = {};
+        for (const clip of creature.clips)
+          actions[clip.name.toLowerCase()] = mixer.clipAction(clip);
+        actions.idle?.play();
+        this.entityMixers.set(e.id, mixer);
+        this.creatureActions.set(e.id, { actions, current: "idle" });
+      } else if (/drone|droid/i.test(e.id) && this.drone) {
         const d = clone(this.drone);
         const b = new THREE.Box3().setFromObject(d);
         d.scale.setScalar(
@@ -990,7 +1066,12 @@ export class PlanetScene {
         d: Math.hypot(e.x - this.player.x, e.z - this.player.z),
       }))
       .filter((o) => o.d < 4.5)
-      .sort((a, b) => a.d - b.d)[0]?.e;
+      .sort(
+        (a, b) =>
+          a.d -
+          (a.e.type === "loot" ? 1.5 : 0) -
+          (b.d - (b.e.type === "loot" ? 1.5 : 0)),
+      )[0]?.e;
   }
   resize() {
     const w = this.host.clientWidth,
@@ -1015,7 +1096,7 @@ export class PlanetScene {
     this.clock += dt;
     let dx = 0,
       dz = 0;
-    if (this.ready && !this.typing()) {
+    if (this.ready && this.focused && !this.typing()) {
       if (this.keys.has("w") || this.keys.has("ц")) dz -= 1;
       if (this.keys.has("s") || this.keys.has("ы")) dz += 1;
       if (this.keys.has("a") || this.keys.has("ф")) dx -= 1;

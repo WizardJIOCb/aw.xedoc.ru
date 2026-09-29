@@ -1,0 +1,242 @@
+[
+  {
+    "originalId": 0,
+    "en": "Combat",
+    "ru": "Комбат"
+  },
+  {
+    "originalId": 1,
+    "en": "Strength",
+    "ru": "Сила"
+  },
+  {
+    "originalId": 2,
+    "en": "Dexterity",
+    "ru": "Ловкость"
+  },
+  {
+    "originalId": 3,
+    "en": "Intelligence",
+    "ru": "Интеллект"
+  },
+  {
+    "originalId": 4,
+    "en": "Vitality",
+    "ru": "Живучесть"
+  },
+  {
+    "originalId": 5,
+    "en": "Intuition",
+    "ru": "Интуиция"
+  },
+  {
+    "originalId": 6,
+    "en": "Fencing",
+    "ru": "Фехтование"
+  },
+  {
+    "originalId": 7,
+    "en": "Heavy Weapons",
+    "ru": "Тяжелое Оружие"
+  },
+  {
+    "originalId": 8,
+    "en": "Punching",
+    "ru": "Рукопашный"
+  },
+  {
+    "originalId": 9,
+    "en": "Medieval Weapons",
+    "ru": "Устаревшее Оружие"
+  },
+  {
+    "originalId": 10,
+    "en": "Automatic Weapons",
+    "ru": "Авто. Оружие"
+  },
+  {
+    "originalId": 11,
+    "en": "Assembling Weapons",
+    "ru": "Собирающее Оружие"
+  },
+  {
+    "originalId": 12,
+    "en": "Piercing",
+    "ru": "Колющее Оружие"
+  },
+  {
+    "originalId": 13,
+    "en": "Cooking",
+    "ru": "Кулинария"
+  },
+  {
+    "originalId": 14,
+    "en": "Fishing",
+    "ru": "Рыболовство"
+  },
+  {
+    "originalId": 15,
+    "en": "Herbalism",
+    "ru": "Знахарство"
+  },
+  {
+    "originalId": 16,
+    "en": "Woodwork",
+    "ru": "Плотничество"
+  },
+  {
+    "originalId": 17,
+    "en": "Blacksmithing",
+    "ru": "Кузнечное Дело"
+  },
+  {
+    "originalId": 18,
+    "en": "Geology",
+    "ru": "Геология"
+  },
+  {
+    "originalId": 19,
+    "en": "Metallurgy",
+    "ru": "Металлургия"
+  },
+  {
+    "originalId": 20,
+    "en": "Composite",
+    "ru": "Композиты"
+  },
+  {
+    "originalId": 21,
+    "en": "Crafting",
+    "ru": "Ремесло"
+  },
+  {
+    "originalId": 22,
+    "en": "High-tech",
+    "ru": "Высокие Технологии"
+  },
+  {
+    "originalId": 26,
+    "en": "Lockpicking",
+    "ru": "Взлом Замков"
+  },
+  {
+    "originalId": 32,
+    "en": "Scientific",
+    "ru": "Научная Работа"
+  },
+  {
+    "originalId": 35,
+    "en": "Tailor",
+    "ru": "Портняжное Дело"
+  },
+  {
+    "originalId": 37,
+    "en": "Stamina",
+    "ru": "Выносливость"
+  },
+  {
+    "originalId": 38,
+    "en": "Fatigue",
+    "ru": "Усталость"
+  },
+  {
+    "originalId": 39,
+    "en": "Force Energy",
+    "ru": "Энергетика"
+  },
+  {
+    "originalId": 40,
+    "en": "Health",
+    "ru": "Жизнь"
+  },
+  {
+    "originalId": 41,
+    "en": "Attack",
+    "ru": "Атака"
+  },
+  {
+    "originalId": 42,
+    "en": "Defense",
+    "ru": "Защита"
+  },
+  {
+    "originalId": 43,
+    "en": "Range of attack",
+    "ru": "Дальность атаки"
+  },
+  {
+    "originalId": 44,
+    "en": "Cutting",
+    "ru": "Режущее"
+  },
+  {
+    "originalId": 45,
+    "en": "Impaling",
+    "ru": "Проникающее"
+  },
+  {
+    "originalId": 46,
+    "en": "Deafening",
+    "ru": "Оглушающее"
+  },
+  {
+    "originalId": 47,
+    "en": "High Temperature",
+    "ru": "Воспламеняющее"
+  },
+  {
+    "originalId": 48,
+    "en": "Low Temperature",
+    "ru": "Замораживающее"
+  },
+  {
+    "originalId": 49,
+    "en": "Electricity",
+    "ru": "Электрическое"
+  },
+  {
+    "originalId": 50,
+    "en": "Drugs & Chemicals",
+    "ru": "Химические"
+  },
+  {
+    "originalId": 51,
+    "en": "Force",
+    "ru": "Энергосиловое"
+  },
+  {
+    "originalId": 52,
+    "en": "Primary Stats",
+    "ru": "Первичные"
+  },
+  {
+    "originalId": 53,
+    "en": "Secondary Stats",
+    "ru": "Вторичные"
+  },
+  {
+    "originalId": 54,
+    "en": "Resistances/Damage",
+    "ru": "Защита/Повреждения"
+  },
+  {
+    "originalId": 55,
+    "en": "Combat",
+    "ru": "Боевые Навыки"
+  },
+  {
+    "originalId": 56,
+    "en": "Outdoorsman",
+    "ru": "Общие Умения"
+  },
+  {
+    "originalId": 57,
+    "en": "Crafting",
+    "ru": "Ремесло"
+  },
+  {
+    "originalId": 60,
+    "en": "Scientific",
+    "ru": "Научные Знания"
+  }
+]

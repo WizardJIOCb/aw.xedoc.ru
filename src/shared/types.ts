@@ -1,0 +1,87 @@
+export type Position = { x: number; z: number };
+export type ItemDef = {
+  id: string;
+  name: string;
+  kind: string;
+  weight: number;
+  value: number;
+  description?: string;
+  damage?: number;
+  healing?: number;
+  skill?: string;
+  requires?: Record<string, number>;
+};
+export type RecipeDef = {
+  id: string;
+  name: string;
+  inputs: Record<string, number>;
+  outputs: Record<string, number>;
+  skill: string;
+  level: number;
+  station: string;
+  seconds: number;
+};
+export type Player = {
+  id: string;
+  name: string;
+  x: number;
+  z: number;
+  rotation: number;
+  hp: number;
+  maxHp: number;
+  stamina: number;
+  maxStamina: number;
+  force: number;
+  credits: number;
+  level: number;
+  xp: number;
+  skills: Record<string, number>;
+  stats: Record<string, number>;
+  inventory: Record<string, number>;
+  bank: Record<string, number>;
+  equipped: string | null;
+  equipment?: Record<string, string>;
+  mode: string;
+  pk: number;
+  quest: Record<string, number>;
+  online: boolean;
+  action?: string;
+  clan?: string | null;
+};
+export type Entity = {
+  id: string;
+  type: string;
+  name: string;
+  x: number;
+  z: number;
+  hp?: number;
+  maxHp?: number;
+  alive?: boolean;
+  respawnAt?: number;
+  resource?: string;
+  stock?: number;
+  level?: number;
+  state?: string;
+};
+export type ChatLine = {
+  id: string;
+  name: string;
+  text: string;
+  at: number;
+  channel?: string;
+};
+export type Snapshot = {
+  type: "snapshot";
+  self: Player;
+  players: Player[];
+  entities: Entity[];
+  messages: ChatLine[];
+  time: number;
+};
+export type WorldData = {
+  items: ItemDef[];
+  recipes: RecipeDef[];
+  professions: { id: string; name: string; description: string }[];
+  entities: Entity[];
+  locations?: unknown[];
+};

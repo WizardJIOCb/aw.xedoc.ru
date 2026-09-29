@@ -1,0 +1,95 @@
+{
+  "skinnedMeshes": 8,
+  "clips": [
+    {
+      "clip": "Sprint",
+      "duration": 0.7083333134651184,
+      "midpointBounds": [
+        0.828,
+        1.537,
+        1.354
+      ],
+      "maxExtent": 1.644
+    },
+    {
+      "clip": "Interact",
+      "duration": 2.0416667461395264,
+      "midpointBounds": [
+        0.675,
+        1.81,
+        1.068
+      ],
+      "maxExtent": 1.81
+    },
+    {
+      "clip": "Shoot",
+      "duration": 0.6666666865348816,
+      "midpointBounds": [
+        0.675,
+        1.806,
+        0.915
+      ],
+      "maxExtent": 1.808
+    },
+    {
+      "clip": "Death",
+      "duration": 2.4166667461395264,
+      "midpointBounds": [
+        1.134,
+        0.731,
+        2.065
+      ],
+      "maxExtent": 2.217
+    },
+    {
+      "clip": "Hit",
+      "duration": 0.375,
+      "midpointBounds": [
+        0.734,
+        1.811,
+        0.732
+      ],
+      "maxExtent": 1.813
+    },
+    {
+      "clip": "Attack",
+      "duration": 1.5416666269302368,
+      "midpointBounds": [
+        0.855,
+        1.332,
+        1.384
+      ],
+      "maxExtent": 1.71
+    },
+    {
+      "clip": "Run",
+      "duration": 0.9583333134651184,
+      "midpointBounds": [
+        0.757,
+        1.579,
+        1.608
+      ],
+      "maxExtent": 1.636
+    },
+    {
+      "clip": "Walk",
+      "duration": 1.375,
+      "midpointBounds": [
+        0.653,
+        1.788,
+        0.953
+      ],
+      "maxExtent": 1.826
+    },
+    {
+      "clip": "Idle",
+      "duration": 2.5416667461395264,
+      "midpointBounds": [
+        0.721,
+        1.81,
+        0.732
+      ],
+      "maxExtent": 1.811
+    }
+  ]
+}

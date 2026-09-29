@@ -1,0 +1,26 @@
+{
+  "sourceUrl": "http://site.awplanet.com/client/single/build/webdata.data",
+  "retrievedAt": "2026-09-30",
+  "sha256": "9de0b9112f724166809ed91807333f806037721e45dba123e21056d15a63b848",
+  "bytes": 7490498,
+  "archiveVersion": 1,
+  "chunks": 305,
+  "objectsSlots": 1000,
+  "namedObjects": 888,
+  "uniqueObjectNames": 647,
+  "interactionSlots": 600,
+  "activeInteractionTargets": 584,
+  "map": {
+    "magic": "MAP",
+    "bytes": 2097160,
+    "payloadBytes": 2097152,
+    "coordinateSchema": "unknown",
+    "copied": false
+  },
+  "notes": [
+    "Named objects include NPCs, scenery, creatures, certificates, tools and items. This is not a count of playable items.",
+    "Interaction table contains 600 slots; empty slots and runtime-dependent actions exist. Ingredient quantities and field schema are unverified.",
+    "The public data predates the current remake. It is a reference snapshot, not proof of complete Classic server state.",
+    "Original images, geometry, fonts, full descriptive strings, dialogues and executable code were not imported."
+  ]
+}

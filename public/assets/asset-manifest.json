@@ -1,0 +1,107 @@
+{
+  "drone.glb": {
+    "bytes": 1334536,
+    "triangles": 3530,
+    "skinJoints": [
+      8
+    ],
+    "animations": [
+      {
+        "name": "Attack",
+        "duration": 0.6,
+        "channels": 24
+      },
+      {
+        "name": "BackFlip",
+        "duration": 1.3333333333333333,
+        "channels": 24
+      },
+      {
+        "name": "Charging",
+        "duration": 0.5,
+        "channels": 24
+      },
+      {
+        "name": "Hit",
+        "duration": 0.26666666666666666,
+        "channels": 24
+      },
+      {
+        "name": "Idle",
+        "duration": 3.3333333333333335,
+        "channels": 24
+      },
+      {
+        "name": "Look",
+        "duration": 3.3333333333333335,
+        "channels": 24
+      }
+    ]
+  },
+  "hero.glb": {
+    "bytes": 4932552,
+    "triangles": 25020,
+    "skinJoints": [
+      65
+    ],
+    "animations": [
+      {
+        "name": "Sprint",
+        "duration": 0.7083333333333334,
+        "channels": 195
+      },
+      {
+        "name": "Interact",
+        "duration": 2.0416666666666665,
+        "channels": 195
+      },
+      {
+        "name": "Shoot",
+        "duration": 0.6666666666666666,
+        "channels": 195
+      },
+      {
+        "name": "Death",
+        "duration": 2.4166666666666665,
+        "channels": 195
+      },
+      {
+        "name": "Hit",
+        "duration": 0.375,
+        "channels": 195
+      },
+      {
+        "name": "Attack",
+        "duration": 1.5416666666666667,
+        "channels": 195
+      },
+      {
+        "name": "Run",
+        "duration": 0.9583333333333334,
+        "channels": 195
+      },
+      {
+        "name": "Walk",
+        "duration": 1.375,
+        "channels": 195
+      },
+      {
+        "name": "Idle",
+        "duration": 2.5416666666666665,
+        "channels": 195
+      }
+    ]
+  },
+  "house.glb": {
+    "bytes": 235944,
+    "triangles": 3256,
+    "skinJoints": [],
+    "animations": []
+  },
+  "tree.glb": {
+    "bytes": 57516,
+    "triangles": 552,
+    "skinJoints": [],
+    "animations": []
+  }
+}

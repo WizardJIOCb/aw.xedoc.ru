@@ -1,0 +1,4140 @@
+[
+  {
+    "originalId": 0,
+    "name": "Credits"
+  },
+  {
+    "originalId": 1,
+    "name": "Bush"
+  },
+  {
+    "originalId": 2,
+    "name": "Bush"
+  },
+  {
+    "originalId": 3,
+    "name": "Tree"
+  },
+  {
+    "originalId": 4,
+    "name": "Door"
+  },
+  {
+    "originalId": 5,
+    "name": "Dry tree"
+  },
+  {
+    "originalId": 6,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 7,
+    "name": "Scorpion",
+    "facts": {
+      "creatureLevel": 1
+    }
+  },
+  {
+    "originalId": 8,
+    "name": "Bush"
+  },
+  {
+    "originalId": 9,
+    "name": "Cirbango"
+  },
+  {
+    "originalId": 10,
+    "name": "Banker"
+  },
+  {
+    "originalId": 11,
+    "name": "Seller"
+  },
+  {
+    "originalId": 12,
+    "name": "Cirbango Tree"
+  },
+  {
+    "originalId": 13,
+    "name": "Bait"
+  },
+  {
+    "originalId": 14,
+    "name": "Butterfly"
+  },
+  {
+    "originalId": 15,
+    "name": "Feather"
+  },
+  {
+    "originalId": 16,
+    "name": "Matches"
+  },
+  {
+    "originalId": 17,
+    "name": "Rapan"
+  },
+  {
+    "originalId": 18,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 19,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 20,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 21,
+    "name": "Scorpion",
+    "facts": {
+      "creatureLevel": 10
+    }
+  },
+  {
+    "originalId": 22,
+    "name": "Scorpion",
+    "facts": {
+      "creatureLevel": 25
+    }
+  },
+  {
+    "originalId": 23,
+    "name": "Scorpion",
+    "facts": {
+      "creatureLevel": 40
+    }
+  },
+  {
+    "originalId": 24,
+    "name": "Bronze Shield"
+  },
+  {
+    "originalId": 25,
+    "name": "Plastic Shield"
+  },
+  {
+    "originalId": 26,
+    "name": "Iron Shield"
+  },
+  {
+    "originalId": 27,
+    "name": "Kevlar Shield"
+  },
+  {
+    "originalId": 28,
+    "name": "Titanium Shield"
+  },
+  {
+    "originalId": 29,
+    "name": "Aerogel Shield"
+  },
+  {
+    "originalId": 30,
+    "name": "Froanite Shield"
+  },
+  {
+    "originalId": 31,
+    "name": "Dianite Shield"
+  },
+  {
+    "originalId": 32,
+    "name": "Jonh Oremor"
+  },
+  {
+    "originalId": 33,
+    "name": "Garden scissors"
+  },
+  {
+    "originalId": 34,
+    "name": "Boots"
+  },
+  {
+    "originalId": 35,
+    "name": "Bronze Helmet"
+  },
+  {
+    "originalId": 36,
+    "name": "Plastic Helmet"
+  },
+  {
+    "originalId": 37,
+    "name": "Iron Helmet"
+  },
+  {
+    "originalId": 38,
+    "name": "Kevlar Helmet"
+  },
+  {
+    "originalId": 39,
+    "name": "Titanium Helmet"
+  },
+  {
+    "originalId": 40,
+    "name": "Aerogel Helmet"
+  },
+  {
+    "originalId": 41,
+    "name": "Froanite Helmet"
+  },
+  {
+    "originalId": 42,
+    "name": "Dianite Helmet"
+  },
+  {
+    "originalId": 43,
+    "name": "Seller"
+  },
+  {
+    "originalId": 44,
+    "name": "First Aid Kit",
+    "facts": {
+      "intelligence": 5
+    }
+  },
+  {
+    "originalId": 45,
+    "name": "Encyclopedia",
+    "facts": {
+      "bookExperience": 50
+    }
+  },
+  {
+    "originalId": 46,
+    "name": "Mechanics",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 47,
+    "name": "High-tech",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 48,
+    "name": "Robotics",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 49,
+    "name": "Programming",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 50,
+    "name": "Scientific",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 51,
+    "name": "Chemistry",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 52,
+    "name": "Biology",
+    "facts": {
+      "bookExperience": 100
+    }
+  },
+  {
+    "originalId": 53,
+    "name": "Book Shelf"
+  },
+  {
+    "originalId": 54,
+    "name": "Bookseller"
+  },
+  {
+    "originalId": 55,
+    "name": "Bronze Axe",
+    "facts": {
+      "combatLevel": 1,
+      "cuttingDamage": 6,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 1
+      }
+    }
+  },
+  {
+    "originalId": 56,
+    "name": "Iron Axe",
+    "facts": {
+      "combatLevel": 15,
+      "cuttingDamage": 10,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 10
+      }
+    }
+  },
+  {
+    "originalId": 57,
+    "name": "Titanium Axe",
+    "facts": {
+      "combatLevel": 30,
+      "cuttingDamage": 14,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 20
+      }
+    }
+  },
+  {
+    "originalId": 58,
+    "name": "Froanite Axe",
+    "facts": {
+      "combatLevel": 45,
+      "cuttingDamage": 20,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 40
+      }
+    }
+  },
+  {
+    "originalId": 59,
+    "name": "Dianite Axe",
+    "facts": {
+      "combatLevel": 60,
+      "cuttingDamage": 25,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 60
+      }
+    }
+  },
+  {
+    "originalId": 60,
+    "name": "Bronze Sword",
+    "facts": {
+      "combatLevel": 1,
+      "cuttingDamage": 5,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 1
+      }
+    }
+  },
+  {
+    "originalId": 61,
+    "name": "Iron Sword",
+    "facts": {
+      "combatLevel": 15,
+      "cuttingDamage": 9,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 10
+      }
+    }
+  },
+  {
+    "originalId": 62,
+    "name": "Titanium Sword",
+    "facts": {
+      "combatLevel": 30,
+      "cuttingDamage": 12,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 20
+      }
+    }
+  },
+  {
+    "originalId": 63,
+    "name": "Froanite Sword",
+    "facts": {
+      "combatLevel": 45,
+      "cuttingDamage": 16,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 40
+      }
+    }
+  },
+  {
+    "originalId": 64,
+    "name": "Dianite Sword",
+    "facts": {
+      "combatLevel": 60,
+      "cuttingDamage": 19,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 60
+      }
+    }
+  },
+  {
+    "originalId": 65,
+    "name": "Stump"
+  },
+  {
+    "originalId": 66,
+    "name": "Logs"
+  },
+  {
+    "originalId": 67,
+    "name": "Fire"
+  },
+  {
+    "originalId": 68,
+    "name": "Ashes"
+  },
+  {
+    "originalId": 69,
+    "name": "Net"
+  },
+  {
+    "originalId": 70,
+    "name": "Fisherman"
+  },
+  {
+    "originalId": 71,
+    "name": "Sea fish"
+  },
+  {
+    "originalId": 72,
+    "name": "Lake Fish"
+  },
+  {
+    "originalId": 73,
+    "name": "River Fish"
+  },
+  {
+    "originalId": 74,
+    "name": "Raw Shrimps"
+  },
+  {
+    "originalId": 75,
+    "name": "Shrimps"
+  },
+  {
+    "originalId": 76,
+    "name": "Burned Shrimps"
+  },
+  {
+    "originalId": 77,
+    "name": "Seller"
+  },
+  {
+    "originalId": 78,
+    "name": "Hammer"
+  },
+  {
+    "originalId": 79,
+    "name": "Knife"
+  },
+  {
+    "originalId": 80,
+    "name": "Sickle"
+  },
+  {
+    "originalId": 81,
+    "name": "Farmer"
+  },
+  {
+    "originalId": 82,
+    "name": "Table"
+  },
+  {
+    "originalId": 83,
+    "name": "Bed"
+  },
+  {
+    "originalId": 84,
+    "name": "Table"
+  },
+  {
+    "originalId": 85,
+    "name": "Hut"
+  },
+  {
+    "originalId": 86,
+    "name": "Zartul",
+    "facts": {
+      "creatureLevel": 5
+    }
+  },
+  {
+    "originalId": 87,
+    "name": "Zartul Elite",
+    "facts": {
+      "creatureLevel": 10
+    }
+  },
+  {
+    "originalId": 88,
+    "name": "Zartul Mag",
+    "facts": {
+      "creatureLevel": 15
+    }
+  },
+  {
+    "originalId": 89,
+    "name": "Zartul Boss",
+    "facts": {
+      "creatureLevel": 20
+    }
+  },
+  {
+    "originalId": 90,
+    "name": "Microwave oven"
+  },
+  {
+    "originalId": 91,
+    "name": "Combine"
+  },
+  {
+    "originalId": 92,
+    "name": "Sink"
+  },
+  {
+    "originalId": 93,
+    "name": "Raw Trout"
+  },
+  {
+    "originalId": 94,
+    "name": "Trout"
+  },
+  {
+    "originalId": 95,
+    "name": "Burned Trout"
+  },
+  {
+    "originalId": 96,
+    "name": "Seller"
+  },
+  {
+    "originalId": 97,
+    "name": "Portal Exit "
+  },
+  {
+    "originalId": 98,
+    "name": "Portal"
+  },
+  {
+    "originalId": 99,
+    "name": "Armarin Pot"
+  },
+  {
+    "originalId": 100,
+    "name": "Gold Card"
+  },
+  {
+    "originalId": 101,
+    "name": "Raw Armarin"
+  },
+  {
+    "originalId": 102,
+    "name": "Armarin"
+  },
+  {
+    "originalId": 103,
+    "name": "Burned Armarin"
+  },
+  {
+    "originalId": 104,
+    "name": "Raw Salmon"
+  },
+  {
+    "originalId": 105,
+    "name": "Salmon"
+  },
+  {
+    "originalId": 106,
+    "name": "Burned Salmon"
+  },
+  {
+    "originalId": 107,
+    "name": "~Bronze Sword",
+    "facts": {
+      "combatLevel": 7,
+      "cuttingDamage": 7,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 5
+      }
+    }
+  },
+  {
+    "originalId": 108,
+    "name": "~Iron Sword",
+    "facts": {
+      "combatLevel": 22,
+      "cuttingDamage": 10,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 15
+      }
+    }
+  },
+  {
+    "originalId": 109,
+    "name": "~Titanium Sword",
+    "facts": {
+      "combatLevel": 37,
+      "cuttingDamage": 13,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 30
+      }
+    }
+  },
+  {
+    "originalId": 110,
+    "name": "~Froanite Sword",
+    "facts": {
+      "combatLevel": 53,
+      "cuttingDamage": 17,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 50
+      }
+    }
+  },
+  {
+    "originalId": 111,
+    "name": "~Dianite Sword",
+    "facts": {
+      "combatLevel": 70,
+      "cuttingDamage": 20,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 70
+      }
+    }
+  },
+  {
+    "originalId": 112,
+    "name": "~Bronze Axe",
+    "facts": {
+      "combatLevel": 7,
+      "cuttingDamage": 8,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 5
+      }
+    }
+  },
+  {
+    "originalId": 113,
+    "name": "~Iron Axe",
+    "facts": {
+      "combatLevel": 22,
+      "cuttingDamage": 12,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 15
+      }
+    }
+  },
+  {
+    "originalId": 114,
+    "name": "~Titanium Axe",
+    "facts": {
+      "combatLevel": 37,
+      "cuttingDamage": 16,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 30
+      }
+    }
+  },
+  {
+    "originalId": 115,
+    "name": "~Froanite Axe",
+    "facts": {
+      "combatLevel": 53,
+      "cuttingDamage": 22,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 50
+      }
+    }
+  },
+  {
+    "originalId": 116,
+    "name": "~Dianite Axe",
+    "facts": {
+      "combatLevel": 70,
+      "cuttingDamage": 27,
+      "weaponSkill": {
+        "name": "heavy weapons",
+        "level": 70
+      }
+    }
+  },
+  {
+    "originalId": 117,
+    "name": "Bronze Pickaxe"
+  },
+  {
+    "originalId": 118,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 1,
+      "creatureLevel": 1
+    }
+  },
+  {
+    "originalId": 119,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 6,
+      "creatureLevel": 6
+    }
+  },
+  {
+    "originalId": 120,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 10,
+      "creatureLevel": 10
+    }
+  },
+  {
+    "originalId": 121,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 20,
+      "creatureLevel": 20
+    }
+  },
+  {
+    "originalId": 122,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 30,
+      "creatureLevel": 30
+    }
+  },
+  {
+    "originalId": 123,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 35,
+      "creatureLevel": 35
+    }
+  },
+  {
+    "originalId": 124,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 45,
+      "creatureLevel": 45
+    }
+  },
+  {
+    "originalId": 125,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 50,
+      "creatureLevel": 50
+    }
+  },
+  {
+    "originalId": 126,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 60,
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 127,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 70,
+      "creatureLevel": 70
+    }
+  },
+  {
+    "originalId": 128,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 80,
+      "creatureLevel": 80
+    }
+  },
+  {
+    "originalId": 129,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 90,
+      "creatureLevel": 90
+    }
+  },
+  {
+    "originalId": 130,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 100,
+      "creatureLevel": 100
+    }
+  },
+  {
+    "originalId": 131,
+    "name": "Tin Ore"
+  },
+  {
+    "originalId": 132,
+    "name": "Lead Ore"
+  },
+  {
+    "originalId": 133,
+    "name": "Copper Ore"
+  },
+  {
+    "originalId": 134,
+    "name": "Iron Ore"
+  },
+  {
+    "originalId": 135,
+    "name": "Silver Ore"
+  },
+  {
+    "originalId": 136,
+    "name": "Silicon Ore"
+  },
+  {
+    "originalId": 137,
+    "name": "Aluminium Ore"
+  },
+  {
+    "originalId": 138,
+    "name": "Gold Ore"
+  },
+  {
+    "originalId": 139,
+    "name": "Titanium Ore"
+  },
+  {
+    "originalId": 140,
+    "name": "Platinum Ore"
+  },
+  {
+    "originalId": 141,
+    "name": "Wolframite Ore"
+  },
+  {
+    "originalId": 142,
+    "name": "Uranium Ore"
+  },
+  {
+    "originalId": 143,
+    "name": "Elerium Stone"
+  },
+  {
+    "originalId": 144,
+    "name": "Bronze Armour"
+  },
+  {
+    "originalId": 145,
+    "name": "Plastic Armour"
+  },
+  {
+    "originalId": 146,
+    "name": "Iron Armour"
+  },
+  {
+    "originalId": 147,
+    "name": "Kevlar Armour"
+  },
+  {
+    "originalId": 148,
+    "name": "Titanium Armour"
+  },
+  {
+    "originalId": 149,
+    "name": "Aerogel Armour"
+  },
+  {
+    "originalId": 150,
+    "name": "Froanite Armour"
+  },
+  {
+    "originalId": 151,
+    "name": "Dianite Armour"
+  },
+  {
+    "originalId": 152,
+    "name": "Seller"
+  },
+  {
+    "originalId": 153,
+    "name": "Teleporter M1",
+    "facts": {
+      "intelligence": 20
+    }
+  },
+  {
+    "originalId": 154,
+    "name": "Robot Seller"
+  },
+  {
+    "originalId": 155,
+    "name": "Raw Tuna"
+  },
+  {
+    "originalId": 156,
+    "name": "Tuna"
+  },
+  {
+    "originalId": 157,
+    "name": "Burned Tuna"
+  },
+  {
+    "originalId": 158,
+    "name": "Harpoon"
+  },
+  {
+    "originalId": 159,
+    "name": "Raw Crawfish"
+  },
+  {
+    "originalId": 160,
+    "name": "Crawfish"
+  },
+  {
+    "originalId": 161,
+    "name": "Burned Crawfish"
+  },
+  {
+    "originalId": 162,
+    "name": "Furnace "
+  },
+  {
+    "originalId": 163,
+    "name": "Tin Bar"
+  },
+  {
+    "originalId": 164,
+    "name": "Lead Bar"
+  },
+  {
+    "originalId": 165,
+    "name": "Bronze Bar"
+  },
+  {
+    "originalId": 166,
+    "name": "Rock mine",
+    "facts": {
+      "miningLevel": 25,
+      "creatureLevel": 25
+    }
+  },
+  {
+    "originalId": 167,
+    "name": "Coal"
+  },
+  {
+    "originalId": 168,
+    "name": "Coke"
+  },
+  {
+    "originalId": 169,
+    "name": "Press"
+  },
+  {
+    "originalId": 170,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 171,
+    "name": "Boat"
+  },
+  {
+    "originalId": 172,
+    "name": "Boat"
+  },
+  {
+    "originalId": 173,
+    "name": "Mushroom"
+  },
+  {
+    "originalId": 174,
+    "name": "Raw Mushroom"
+  },
+  {
+    "originalId": 175,
+    "name": "unvisible"
+  },
+  {
+    "originalId": 176,
+    "name": "Silver Bar"
+  },
+  {
+    "originalId": 177,
+    "name": "Gold Bar"
+  },
+  {
+    "originalId": 178,
+    "name": "Platinum Bar"
+  },
+  {
+    "originalId": 179,
+    "name": "Iron Bar"
+  },
+  {
+    "originalId": 180,
+    "name": "Bronzal Bar"
+  },
+  {
+    "originalId": 181,
+    "name": "Titanium Bar"
+  },
+  {
+    "originalId": 182,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 183,
+    "name": "Raw Pike"
+  },
+  {
+    "originalId": 184,
+    "name": "Pike"
+  },
+  {
+    "originalId": 185,
+    "name": "Burned Pike"
+  },
+  {
+    "originalId": 186,
+    "name": "Raw Kuruma"
+  },
+  {
+    "originalId": 187,
+    "name": "Kuruma"
+  },
+  {
+    "originalId": 188,
+    "name": "Burned Kuruma"
+  },
+  {
+    "originalId": 189,
+    "name": "Ripe wheat"
+  },
+  {
+    "originalId": 190,
+    "name": "G_Knife"
+  },
+  {
+    "originalId": 191,
+    "name": "Egg"
+  },
+  {
+    "originalId": 192,
+    "name": "G_Egg"
+  },
+  {
+    "originalId": 193,
+    "name": "Seller"
+  },
+  {
+    "originalId": 194,
+    "name": "Chicken",
+    "facts": {
+      "creatureLevel": 1
+    }
+  },
+  {
+    "originalId": 195,
+    "name": "Chicken",
+    "facts": {
+      "creatureLevel": 3
+    }
+  },
+  {
+    "originalId": 196,
+    "name": "Raw meat"
+  },
+  {
+    "originalId": 197,
+    "name": "Meat"
+  },
+  {
+    "originalId": 198,
+    "name": "Burned meat"
+  },
+  {
+    "originalId": 199,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 200,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 201,
+    "name": "Bronze Pole",
+    "facts": {
+      "combatLevel": 1,
+      "cuttingDamage": 5,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 1
+      }
+    }
+  },
+  {
+    "originalId": 202,
+    "name": "~Bronze Pole",
+    "facts": {
+      "combatLevel": 7,
+      "cuttingDamage": 7,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 5
+      }
+    }
+  },
+  {
+    "originalId": 203,
+    "name": "Iron Pole",
+    "facts": {
+      "combatLevel": 15,
+      "cuttingDamage": 9,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 10
+      }
+    }
+  },
+  {
+    "originalId": 204,
+    "name": "~Iron Pole",
+    "facts": {
+      "combatLevel": 22,
+      "cuttingDamage": 10,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 15
+      }
+    }
+  },
+  {
+    "originalId": 205,
+    "name": "Titanium Pole",
+    "facts": {
+      "combatLevel": 30,
+      "cuttingDamage": 12,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 20
+      }
+    }
+  },
+  {
+    "originalId": 206,
+    "name": "~Titanium Pole",
+    "facts": {
+      "combatLevel": 37,
+      "cuttingDamage": 15,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 30
+      }
+    }
+  },
+  {
+    "originalId": 207,
+    "name": "Froanite Pole",
+    "facts": {
+      "combatLevel": 45,
+      "cuttingDamage": 18,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 40
+      }
+    }
+  },
+  {
+    "originalId": 208,
+    "name": "~Froanite Pole",
+    "facts": {
+      "combatLevel": 53,
+      "cuttingDamage": 20,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 50
+      }
+    }
+  },
+  {
+    "originalId": 209,
+    "name": "Dianite Pole",
+    "facts": {
+      "combatLevel": 60,
+      "cuttingDamage": 22,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 60
+      }
+    }
+  },
+  {
+    "originalId": 210,
+    "name": "~Dianite Pole",
+    "facts": {
+      "combatLevel": 70,
+      "cuttingDamage": 23,
+      "weaponSkill": {
+        "name": "piercing",
+        "level": 70
+      }
+    }
+  },
+  {
+    "originalId": 211,
+    "name": "Seller"
+  },
+  {
+    "originalId": 212,
+    "name": "Bronze Dagger",
+    "facts": {
+      "combatLevel": 1,
+      "cuttingDamage": 1,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 1
+      }
+    }
+  },
+  {
+    "originalId": 213,
+    "name": "~Bronze Dagger",
+    "facts": {
+      "combatLevel": 7,
+      "cuttingDamage": 1,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 5
+      }
+    }
+  },
+  {
+    "originalId": 214,
+    "name": "Iron Dagger",
+    "facts": {
+      "combatLevel": 15,
+      "cuttingDamage": 1,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 10
+      }
+    }
+  },
+  {
+    "originalId": 215,
+    "name": "~Iron Dagger",
+    "facts": {
+      "combatLevel": 22,
+      "cuttingDamage": 1,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 15
+      }
+    }
+  },
+  {
+    "originalId": 216,
+    "name": "Titanium Dagger",
+    "facts": {
+      "combatLevel": 30,
+      "cuttingDamage": 2,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 20
+      }
+    }
+  },
+  {
+    "originalId": 217,
+    "name": "~TitaniumDagger",
+    "facts": {
+      "combatLevel": 37,
+      "cuttingDamage": 3,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 30
+      }
+    }
+  },
+  {
+    "originalId": 218,
+    "name": "Froanite Dagger",
+    "facts": {
+      "combatLevel": 45,
+      "cuttingDamage": 4,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 40
+      }
+    }
+  },
+  {
+    "originalId": 219,
+    "name": "~FroaniteDagger",
+    "facts": {
+      "combatLevel": 53,
+      "cuttingDamage": 5,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 50
+      }
+    }
+  },
+  {
+    "originalId": 220,
+    "name": "Dianite Dagger",
+    "facts": {
+      "combatLevel": 60,
+      "cuttingDamage": 6,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 60
+      }
+    }
+  },
+  {
+    "originalId": 221,
+    "name": "~Dianite Dagger",
+    "facts": {
+      "combatLevel": 70,
+      "cuttingDamage": 7,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 70
+      }
+    }
+  },
+  {
+    "originalId": 222,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 223,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 224,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 225,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 226,
+    "name": "Bronze Leg."
+  },
+  {
+    "originalId": 227,
+    "name": "Plastic  Leg."
+  },
+  {
+    "originalId": 228,
+    "name": "Iron  Leg."
+  },
+  {
+    "originalId": 229,
+    "name": "Kevlar  Leg."
+  },
+  {
+    "originalId": 230,
+    "name": "Titanium Leg."
+  },
+  {
+    "originalId": 231,
+    "name": "Aerogel Leg."
+  },
+  {
+    "originalId": 232,
+    "name": "Froanite Leg."
+  },
+  {
+    "originalId": 233,
+    "name": "Dianite Leg."
+  },
+  {
+    "originalId": 234,
+    "name": "Crystal mine",
+    "facts": {
+      "miningLevel": 2,
+      "creatureLevel": 2
+    }
+  },
+  {
+    "originalId": 235,
+    "name": "Crystal mine",
+    "facts": {
+      "miningLevel": 10,
+      "creatureLevel": 10
+    }
+  },
+  {
+    "originalId": 236,
+    "name": "Crystal mine",
+    "facts": {
+      "miningLevel": 40,
+      "creatureLevel": 40
+    }
+  },
+  {
+    "originalId": 237,
+    "name": "Crystal mine",
+    "facts": {
+      "miningLevel": 75,
+      "creatureLevel": 75
+    }
+  },
+  {
+    "originalId": 238,
+    "name": "Rat",
+    "facts": {
+      "creatureLevel": 3
+    }
+  },
+  {
+    "originalId": 239,
+    "name": "Big Rat",
+    "facts": {
+      "creatureLevel": 8
+    }
+  },
+  {
+    "originalId": 240,
+    "name": "Pickhammer"
+  },
+  {
+    "originalId": 241,
+    "name": "Quartz"
+  },
+  {
+    "originalId": 242,
+    "name": "Turmalin"
+  },
+  {
+    "originalId": 243,
+    "name": "Ruby"
+  },
+  {
+    "originalId": 244,
+    "name": "Diamond"
+  },
+  {
+    "originalId": 245,
+    "name": "Battery 10kw"
+  },
+  {
+    "originalId": 246,
+    "name": "Battery 100kw"
+  },
+  {
+    "originalId": 247,
+    "name": "Battery 1000kw"
+  },
+  {
+    "originalId": 248,
+    "name": "Boat"
+  },
+  {
+    "originalId": 249,
+    "name": "Boat"
+  },
+  {
+    "originalId": 250,
+    "name": "Cola"
+  },
+  {
+    "originalId": 251,
+    "name": "Beer Shubin"
+  },
+  {
+    "originalId": 252,
+    "name": "Quass"
+  },
+  {
+    "originalId": 253,
+    "name": "Beer AW"
+  },
+  {
+    "originalId": 254,
+    "name": "Barmen"
+  },
+  {
+    "originalId": 255,
+    "name": "Routing map"
+  },
+  {
+    "originalId": 256,
+    "name": "Globbit",
+    "facts": {
+      "creatureLevel": 9
+    }
+  },
+  {
+    "originalId": 257,
+    "name": "Pheasant",
+    "facts": {
+      "creatureLevel": 6
+    }
+  },
+  {
+    "originalId": 258,
+    "name": "Door"
+  },
+  {
+    "originalId": 259,
+    "name": "Door"
+  },
+  {
+    "originalId": 260,
+    "name": "One way gate"
+  },
+  {
+    "originalId": 261,
+    "name": "One way gate"
+  },
+  {
+    "originalId": 262,
+    "name": "One way gate"
+  },
+  {
+    "originalId": 263,
+    "name": "One way gate"
+  },
+  {
+    "originalId": 264,
+    "name": "Stropterix",
+    "facts": {
+      "creatureLevel": 12
+    }
+  },
+  {
+    "originalId": 265,
+    "name": "Stropterix",
+    "facts": {
+      "creatureLevel": 17
+    }
+  },
+  {
+    "originalId": 266,
+    "name": "Stropterix",
+    "facts": {
+      "creatureLevel": 4
+    }
+  },
+  {
+    "originalId": 267,
+    "name": "Bush"
+  },
+  {
+    "originalId": 268,
+    "name": "Bronze Hatchet"
+  },
+  {
+    "originalId": 269,
+    "name": "Raw meat"
+  },
+  {
+    "originalId": 270,
+    "name": "Planks"
+  },
+  {
+    "originalId": 271,
+    "name": "Wood Sticks"
+  },
+  {
+    "originalId": 272,
+    "name": "Raw shish kebab"
+  },
+  {
+    "originalId": 273,
+    "name": "Shish kebab"
+  },
+  {
+    "originalId": 274,
+    "name": "Burned kebab"
+  },
+  {
+    "originalId": 275,
+    "name": "Meat"
+  },
+  {
+    "originalId": 276,
+    "name": "Burned meat"
+  },
+  {
+    "originalId": 277,
+    "name": "Chair"
+  },
+  {
+    "originalId": 278,
+    "name": "Cutting machine"
+  },
+  {
+    "originalId": 279,
+    "name": "Scanner",
+    "facts": {
+      "intelligence": 10
+    }
+  },
+  {
+    "originalId": 280,
+    "name": "Dead scorpion"
+  },
+  {
+    "originalId": 281,
+    "name": "Dead scorpion"
+  },
+  {
+    "originalId": 282,
+    "name": "Dead scorpion"
+  },
+  {
+    "originalId": 283,
+    "name": "Dead scorpion"
+  },
+  {
+    "originalId": 284,
+    "name": "G_Fire"
+  },
+  {
+    "originalId": 285,
+    "name": "Hermit Bob"
+  },
+  {
+    "originalId": 286,
+    "name": "Laser Pistol"
+  },
+  {
+    "originalId": 287,
+    "name": "Part of arrow"
+  },
+  {
+    "originalId": 288,
+    "name": "Arrow heads"
+  },
+  {
+    "originalId": 289,
+    "name": "Arrow"
+  },
+  {
+    "originalId": 290,
+    "name": "Mould"
+  },
+  {
+    "originalId": 291,
+    "name": "Expert"
+  },
+  {
+    "originalId": 292,
+    "name": "Short Bow"
+  },
+  {
+    "originalId": 293,
+    "name": "WarDroid",
+    "facts": {
+      "creatureLevel": 30
+    }
+  },
+  {
+    "originalId": 294,
+    "name": "Dead Droid"
+  },
+  {
+    "originalId": 295,
+    "name": "Wall"
+  },
+  {
+    "originalId": 296,
+    "name": "Ointment"
+  },
+  {
+    "originalId": 297,
+    "name": "Crate"
+  },
+  {
+    "originalId": 298,
+    "name": "Crate"
+  },
+  {
+    "originalId": 299,
+    "name": "Crate"
+  },
+  {
+    "originalId": 300,
+    "name": "Crate"
+  },
+  {
+    "originalId": 301,
+    "name": "Hatch"
+  },
+  {
+    "originalId": 302,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 303,
+    "name": "Froanite Bar"
+  },
+  {
+    "originalId": 304,
+    "name": "Dianite Bar"
+  },
+  {
+    "originalId": 305,
+    "name": "Plastic Bar"
+  },
+  {
+    "originalId": 306,
+    "name": "Kevlar Bar"
+  },
+  {
+    "originalId": 307,
+    "name": "Aerogel Bar"
+  },
+  {
+    "originalId": 308,
+    "name": "Leaf of krond"
+  },
+  {
+    "originalId": 309,
+    "name": "Root of a krond"
+  },
+  {
+    "originalId": 310,
+    "name": "Red berries"
+  },
+  {
+    "originalId": 311,
+    "name": "Higrim Bush"
+  },
+  {
+    "originalId": 312,
+    "name": "Higrim"
+  },
+  {
+    "originalId": 313,
+    "name": "Unripe wheat"
+  },
+  {
+    "originalId": 314,
+    "name": "AW Team"
+  },
+  {
+    "originalId": 315,
+    "name": "Door"
+  },
+  {
+    "originalId": 316,
+    "name": "Club",
+    "facts": {
+      "cuttingDamage": 3
+    }
+  },
+  {
+    "originalId": 317,
+    "name": "Seller"
+  },
+  {
+    "originalId": 318,
+    "name": "BANK"
+  },
+  {
+    "originalId": 319,
+    "name": "SHOP"
+  },
+  {
+    "originalId": 320,
+    "name": "SHOP"
+  },
+  {
+    "originalId": 321,
+    "name": "BOOK SHOP"
+  },
+  {
+    "originalId": 322,
+    "name": "Joe Deepp"
+  },
+  {
+    "originalId": 323,
+    "name": "KITCHEN"
+  },
+  {
+    "originalId": 324,
+    "name": "FARM"
+  },
+  {
+    "originalId": 325,
+    "name": "Mug"
+  },
+  {
+    "originalId": 326,
+    "name": "Mug of water"
+  },
+  {
+    "originalId": 327,
+    "name": "Mug  of juice"
+  },
+  {
+    "originalId": 328,
+    "name": "Grain"
+  },
+  {
+    "originalId": 329,
+    "name": "unvisible"
+  },
+  {
+    "originalId": 330,
+    "name": "Bowl"
+  },
+  {
+    "originalId": 331,
+    "name": "Flour"
+  },
+  {
+    "originalId": 332,
+    "name": "Forcemeat"
+  },
+  {
+    "originalId": 333,
+    "name": "Flour & Water"
+  },
+  {
+    "originalId": 334,
+    "name": "Paste"
+  },
+  {
+    "originalId": 335,
+    "name": "Bread"
+  },
+  {
+    "originalId": 336,
+    "name": "Burned bread"
+  },
+  {
+    "originalId": 337,
+    "name": "Raw Kebab"
+  },
+  {
+    "originalId": 338,
+    "name": "Kebab"
+  },
+  {
+    "originalId": 339,
+    "name": "Burned kebab"
+  },
+  {
+    "originalId": 340,
+    "name": "Rubber tree"
+  },
+  {
+    "originalId": 341,
+    "name": "*Tin Ore*"
+  },
+  {
+    "originalId": 342,
+    "name": "*Lead Ore*"
+  },
+  {
+    "originalId": 343,
+    "name": "*Copper Ore*"
+  },
+  {
+    "originalId": 344,
+    "name": "*Iron Ore*"
+  },
+  {
+    "originalId": 345,
+    "name": "*Silver Ore*"
+  },
+  {
+    "originalId": 346,
+    "name": "*Silicon Ore*"
+  },
+  {
+    "originalId": 347,
+    "name": "*Aluminium Ore*"
+  },
+  {
+    "originalId": 348,
+    "name": "*Gold Ore*"
+  },
+  {
+    "originalId": 349,
+    "name": "*Titanium Ore*"
+  },
+  {
+    "originalId": 350,
+    "name": "*Platinum Ore*"
+  },
+  {
+    "originalId": 351,
+    "name": "*Wolframite Ore"
+  },
+  {
+    "originalId": 352,
+    "name": "*Uranium Ore*"
+  },
+  {
+    "originalId": 353,
+    "name": "*Elerium Stone*"
+  },
+  {
+    "originalId": 354,
+    "name": "*Coal*"
+  },
+  {
+    "originalId": 355,
+    "name": "Wall"
+  },
+  {
+    "originalId": 356,
+    "name": "*Tin Bar*"
+  },
+  {
+    "originalId": 357,
+    "name": "*Lead Bar*"
+  },
+  {
+    "originalId": 358,
+    "name": "*Bronze Bar*"
+  },
+  {
+    "originalId": 359,
+    "name": "*Iron Bar*"
+  },
+  {
+    "originalId": 360,
+    "name": "*Coke*"
+  },
+  {
+    "originalId": 361,
+    "name": "*Bronzal Bar*"
+  },
+  {
+    "originalId": 362,
+    "name": "*Silver Bar*"
+  },
+  {
+    "originalId": 363,
+    "name": "*Gold Bar*"
+  },
+  {
+    "originalId": 364,
+    "name": "*Titanium Bar*"
+  },
+  {
+    "originalId": 365,
+    "name": "*Platinum Bar*"
+  },
+  {
+    "originalId": 366,
+    "name": "*Froanite Bar*"
+  },
+  {
+    "originalId": 367,
+    "name": "*Dianite Bar*"
+  },
+  {
+    "originalId": 368,
+    "name": "*Plastic Bar*"
+  },
+  {
+    "originalId": 369,
+    "name": "*Kevlar Bar*"
+  },
+  {
+    "originalId": 370,
+    "name": "*Aerogel Bar*"
+  },
+  {
+    "originalId": 371,
+    "name": "Check Post"
+  },
+  {
+    "originalId": 372,
+    "name": "Cap"
+  },
+  {
+    "originalId": 373,
+    "name": "Breakage",
+    "facts": {
+      "cuttingDamage": 5
+    }
+  },
+  {
+    "originalId": 374,
+    "name": "Loader",
+    "facts": {
+      "creatureLevel": 10
+    }
+  },
+  {
+    "originalId": 375,
+    "name": "Drain"
+  },
+  {
+    "originalId": 376,
+    "name": "Locked Bedside"
+  },
+  {
+    "originalId": 377,
+    "name": "Opened Bedside"
+  },
+  {
+    "originalId": 378,
+    "name": "Glasses"
+  },
+  {
+    "originalId": 379,
+    "name": "Agent Smit"
+  },
+  {
+    "originalId": 380,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 381,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 382,
+    "name": "Spider",
+    "facts": {
+      "creatureLevel": 45
+    }
+  },
+  {
+    "originalId": 383,
+    "name": "Kerchief"
+  },
+  {
+    "originalId": 384,
+    "name": "Kerchief"
+  },
+  {
+    "originalId": 385,
+    "name": "Bandit",
+    "facts": {
+      "creatureLevel": 15
+    }
+  },
+  {
+    "originalId": 386,
+    "name": "Leader",
+    "facts": {
+      "creatureLevel": 25
+    }
+  },
+  {
+    "originalId": 387,
+    "name": "Black Helmet"
+  },
+  {
+    "originalId": 388,
+    "name": "Black Warrior",
+    "facts": {
+      "creatureLevel": 45
+    }
+  },
+  {
+    "originalId": 389,
+    "name": "Black Leggings"
+  },
+  {
+    "originalId": 390,
+    "name": "Black Armour"
+  },
+  {
+    "originalId": 391,
+    "name": "Black Shield"
+  },
+  {
+    "originalId": 392,
+    "name": "Black Sword",
+    "facts": {
+      "combatLevel": 25,
+      "cuttingDamage": 12,
+      "weaponSkill": {
+        "name": "fencing",
+        "level": 15
+      }
+    }
+  },
+  {
+    "originalId": 393,
+    "name": "Cactus"
+  },
+  {
+    "originalId": 394,
+    "name": "Big Rat",
+    "facts": {
+      "creatureLevel": 13
+    }
+  },
+  {
+    "originalId": 395,
+    "name": "Cape"
+  },
+  {
+    "originalId": 396,
+    "name": "Lens"
+  },
+  {
+    "originalId": 397,
+    "name": "Quartz tube"
+  },
+  {
+    "originalId": 398,
+    "name": "Ruby core"
+  },
+  {
+    "originalId": 399,
+    "name": "Dianite Powder"
+  },
+  {
+    "originalId": 400,
+    "name": "Pistol"
+  },
+  {
+    "originalId": 401,
+    "name": "Rifle"
+  },
+  {
+    "originalId": 402,
+    "name": "Clip"
+  },
+  {
+    "originalId": 403,
+    "name": "Seller"
+  },
+  {
+    "originalId": 404,
+    "name": "Key"
+  },
+  {
+    "originalId": 405,
+    "name": "GKey"
+  },
+  {
+    "originalId": 406,
+    "name": "Jailer"
+  },
+  {
+    "originalId": 407,
+    "name": "Cap"
+  },
+  {
+    "originalId": 408,
+    "name": "Cape"
+  },
+  {
+    "originalId": 409,
+    "name": "Medical man"
+  },
+  {
+    "originalId": 410,
+    "name": "Scalpel",
+    "facts": {
+      "intelligence": 15
+    }
+  },
+  {
+    "originalId": 411,
+    "name": "Diamond spray"
+  },
+  {
+    "originalId": 412,
+    "name": "*Raw Shrimps*"
+  },
+  {
+    "originalId": 413,
+    "name": "*Raw Trout*"
+  },
+  {
+    "originalId": 414,
+    "name": "*Raw Salmon*"
+  },
+  {
+    "originalId": 415,
+    "name": "*Raw Crawfish*"
+  },
+  {
+    "originalId": 416,
+    "name": "*Raw Pike*"
+  },
+  {
+    "originalId": 417,
+    "name": "*Raw Armarin*"
+  },
+  {
+    "originalId": 418,
+    "name": "*Raw Tuna*"
+  },
+  {
+    "originalId": 419,
+    "name": "*Raw Kuruma*"
+  },
+  {
+    "originalId": 420,
+    "name": "Boat"
+  },
+  {
+    "originalId": 421,
+    "name": "Chicken"
+  },
+  {
+    "originalId": 422,
+    "name": "Farmer"
+  },
+  {
+    "originalId": 423,
+    "name": "Shaldar",
+    "facts": {
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 424,
+    "name": "Cocoon"
+  },
+  {
+    "originalId": 425,
+    "name": "Cape"
+  },
+  {
+    "originalId": 426,
+    "name": "Scorpion",
+    "facts": {
+      "creatureLevel": 80
+    }
+  },
+  {
+    "originalId": 427,
+    "name": "Tree"
+  },
+  {
+    "originalId": 428,
+    "name": "Tree"
+  },
+  {
+    "originalId": 429,
+    "name": "Boulder"
+  },
+  {
+    "originalId": 430,
+    "name": "Gate"
+  },
+  {
+    "originalId": 431,
+    "name": "Fisherman"
+  },
+  {
+    "originalId": 432,
+    "name": "El.Harpoon"
+  },
+  {
+    "originalId": 433,
+    "name": "Raw Squid"
+  },
+  {
+    "originalId": 434,
+    "name": "Squid"
+  },
+  {
+    "originalId": 435,
+    "name": "Burned Squid"
+  },
+  {
+    "originalId": 436,
+    "name": "Raw Ceratiasc"
+  },
+  {
+    "originalId": 437,
+    "name": "Ceratiasc"
+  },
+  {
+    "originalId": 438,
+    "name": "Burned Ceratias"
+  },
+  {
+    "originalId": 439,
+    "name": "Gate"
+  },
+  {
+    "originalId": 440,
+    "name": "Banker"
+  },
+  {
+    "originalId": 441,
+    "name": "Bronze THelmet"
+  },
+  {
+    "originalId": 442,
+    "name": "Plastic THelmet"
+  },
+  {
+    "originalId": 443,
+    "name": "Iron THelmet"
+  },
+  {
+    "originalId": 444,
+    "name": "Kevlar THelmet"
+  },
+  {
+    "originalId": 445,
+    "name": "Titanium THelme"
+  },
+  {
+    "originalId": 446,
+    "name": "Aerogel THelmet"
+  },
+  {
+    "originalId": 447,
+    "name": "Froanite THelme"
+  },
+  {
+    "originalId": 448,
+    "name": "Dianite THelmet"
+  },
+  {
+    "originalId": 449,
+    "name": "Black THelmet"
+  },
+  {
+    "originalId": 450,
+    "name": "BT Shield"
+  },
+  {
+    "originalId": 451,
+    "name": "PT Shield"
+  },
+  {
+    "originalId": 452,
+    "name": "IT Shield"
+  },
+  {
+    "originalId": 453,
+    "name": "KT Shield"
+  },
+  {
+    "originalId": 454,
+    "name": "TT Shield"
+  },
+  {
+    "originalId": 455,
+    "name": "AT Shield"
+  },
+  {
+    "originalId": 456,
+    "name": "FT Shield"
+  },
+  {
+    "originalId": 457,
+    "name": "DT Shield"
+  },
+  {
+    "originalId": 458,
+    "name": "BLT Shield"
+  },
+  {
+    "originalId": 459,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 460,
+    "name": "Robot Seller"
+  },
+  {
+    "originalId": 461,
+    "name": "Instrument"
+  },
+  {
+    "originalId": 462,
+    "name": "Wires"
+  },
+  {
+    "originalId": 463,
+    "name": "Main Board"
+  },
+  {
+    "originalId": 464,
+    "name": "Electronic lens"
+  },
+  {
+    "originalId": 465,
+    "name": "Seller"
+  },
+  {
+    "originalId": 466,
+    "name": "Seller"
+  },
+  {
+    "originalId": 467,
+    "name": "Shovel"
+  },
+  {
+    "originalId": 468,
+    "name": "Heap of sand"
+  },
+  {
+    "originalId": 469,
+    "name": "Heap of ore"
+  },
+  {
+    "originalId": 470,
+    "name": "Heap of sulfur"
+  },
+  {
+    "originalId": 471,
+    "name": "Sand"
+  },
+  {
+    "originalId": 472,
+    "name": "Unknown ore"
+  },
+  {
+    "originalId": 473,
+    "name": "Sulfur"
+  },
+  {
+    "originalId": 474,
+    "name": "*Raw Squid*"
+  },
+  {
+    "originalId": 475,
+    "name": "*Raw Ceratiasc*"
+  },
+  {
+    "originalId": 476,
+    "name": "*Sand*"
+  },
+  {
+    "originalId": 477,
+    "name": "*Unknown ore*"
+  },
+  {
+    "originalId": 478,
+    "name": "*Sulfur*"
+  },
+  {
+    "originalId": 479,
+    "name": "*Ashes*"
+  },
+  {
+    "originalId": 480,
+    "name": "Spectralizer"
+  },
+  {
+    "originalId": 481,
+    "name": "ElCap"
+  },
+  {
+    "originalId": 482,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 483,
+    "name": "Librarian"
+  },
+  {
+    "originalId": 484,
+    "name": "Deer",
+    "facts": {
+      "creatureLevel": 20
+    }
+  },
+  {
+    "originalId": 485,
+    "name": "Raw meat"
+  },
+  {
+    "originalId": 486,
+    "name": "Meat"
+  },
+  {
+    "originalId": 487,
+    "name": "Burned meat"
+  },
+  {
+    "originalId": 488,
+    "name": "Deer hide"
+  },
+  {
+    "originalId": 489,
+    "name": "Scanner ST M2",
+    "facts": {
+      "intelligence": 30
+    }
+  },
+  {
+    "originalId": 490,
+    "name": "HotDog",
+    "facts": {
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 491,
+    "name": "Dog",
+    "facts": {
+      "creatureLevel": 30
+    }
+  },
+  {
+    "originalId": 492,
+    "name": "Reader",
+    "facts": {
+      "intelligence": 25
+    }
+  },
+  {
+    "originalId": 493,
+    "name": "Disquette"
+  },
+  {
+    "originalId": 494,
+    "name": "Fir-tree"
+  },
+  {
+    "originalId": 495,
+    "name": "Santa Hat"
+  },
+  {
+    "originalId": 496,
+    "name": "Sapphire"
+  },
+  {
+    "originalId": 497,
+    "name": "Emerald"
+  },
+  {
+    "originalId": 498,
+    "name": "Zirconium Ore"
+  },
+  {
+    "originalId": 499,
+    "name": "Hafnium Ore"
+  },
+  {
+    "originalId": 500,
+    "name": "Tantalum Ore"
+  },
+  {
+    "originalId": 501,
+    "name": "Beryllium Ore"
+  },
+  {
+    "originalId": 502,
+    "name": "Indium Ore"
+  },
+  {
+    "originalId": 503,
+    "name": "Rhenium Ore"
+  },
+  {
+    "originalId": 504,
+    "name": "WarDroid",
+    "facts": {
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 505,
+    "name": "Dead Droid"
+  },
+  {
+    "originalId": 506,
+    "name": "Ladder"
+  },
+  {
+    "originalId": 507,
+    "name": "Zartite Bar"
+  },
+  {
+    "originalId": 508,
+    "name": "Haftite Bar"
+  },
+  {
+    "originalId": 509,
+    "name": "Rhenite Bar"
+  },
+  {
+    "originalId": 510,
+    "name": "Flax"
+  },
+  {
+    "originalId": 511,
+    "name": "unvisible"
+  },
+  {
+    "originalId": 512,
+    "name": "Flax"
+  },
+  {
+    "originalId": 513,
+    "name": "Poster"
+  },
+  {
+    "originalId": 514,
+    "name": "Showcase"
+  },
+  {
+    "originalId": 515,
+    "name": "Slot Machine"
+  },
+  {
+    "originalId": 516,
+    "name": "Tree"
+  },
+  {
+    "originalId": 517,
+    "name": "Flower"
+  },
+  {
+    "originalId": 518,
+    "name": "Iron Hatchet"
+  },
+  {
+    "originalId": 519,
+    "name": "Titan. Hatchet"
+  },
+  {
+    "originalId": 520,
+    "name": "Froan. Hatchet"
+  },
+  {
+    "originalId": 521,
+    "name": "Iron Buckler"
+  },
+  {
+    "originalId": 522,
+    "name": "Titan. Buckler"
+  },
+  {
+    "originalId": 523,
+    "name": "Froan. Buckler"
+  },
+  {
+    "originalId": 524,
+    "name": "Iron Hammer"
+  },
+  {
+    "originalId": 525,
+    "name": "Titanium Hammer"
+  },
+  {
+    "originalId": 526,
+    "name": "Froanite Hammer"
+  },
+  {
+    "originalId": 527,
+    "name": "Symbol"
+  },
+  {
+    "originalId": 528,
+    "name": "Guardian",
+    "facts": {
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 529,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 530,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 531,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 532,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 533,
+    "name": "Cape"
+  },
+  {
+    "originalId": 534,
+    "name": "Cape"
+  },
+  {
+    "originalId": 535,
+    "name": "Cape"
+  },
+  {
+    "originalId": 536,
+    "name": "Cape"
+  },
+  {
+    "originalId": 537,
+    "name": "Cape"
+  },
+  {
+    "originalId": 538,
+    "name": "Battle Bow"
+  },
+  {
+    "originalId": 539,
+    "name": "Robber",
+    "facts": {
+      "creatureLevel": 25
+    }
+  },
+  {
+    "originalId": 540,
+    "name": "Web"
+  },
+  {
+    "originalId": 541,
+    "name": "Beer Schti"
+  },
+  {
+    "originalId": 542,
+    "name": "STREK"
+  },
+  {
+    "originalId": 543,
+    "name": "DEXAT"
+  },
+  {
+    "originalId": 544,
+    "name": "VITYL"
+  },
+  {
+    "originalId": 545,
+    "name": "INTAS"
+  },
+  {
+    "originalId": 546,
+    "name": "INTUL"
+  },
+  {
+    "originalId": 547,
+    "name": "ENGECK"
+  },
+  {
+    "originalId": 548,
+    "name": "SUFAL"
+  },
+  {
+    "originalId": 549,
+    "name": "ALCAT"
+  },
+  {
+    "originalId": 550,
+    "name": "CONED"
+  },
+  {
+    "originalId": 551,
+    "name": "CONTI"
+  },
+  {
+    "originalId": 552,
+    "name": "SUFAL-STREK"
+  },
+  {
+    "originalId": 553,
+    "name": "SUFAL-DEXAT"
+  },
+  {
+    "originalId": 554,
+    "name": "SUFAL-VITYL"
+  },
+  {
+    "originalId": 555,
+    "name": "SUFAL-INTAS"
+  },
+  {
+    "originalId": 556,
+    "name": "SUFAL-INTUL"
+  },
+  {
+    "originalId": 557,
+    "name": "ALCAT-STREK"
+  },
+  {
+    "originalId": 558,
+    "name": "ALCAT-DEXAT"
+  },
+  {
+    "originalId": 559,
+    "name": "ALCAT-VITYL"
+  },
+  {
+    "originalId": 560,
+    "name": "ALCAT-INTAS"
+  },
+  {
+    "originalId": 561,
+    "name": "ALCAT-INTUL"
+  },
+  {
+    "originalId": 562,
+    "name": "CONED-STREK"
+  },
+  {
+    "originalId": 563,
+    "name": "CONED-DEXAT"
+  },
+  {
+    "originalId": 564,
+    "name": "CONED-VITYL"
+  },
+  {
+    "originalId": 565,
+    "name": "CONED-INTAS"
+  },
+  {
+    "originalId": 566,
+    "name": "CONED-INTUL"
+  },
+  {
+    "originalId": 567,
+    "name": "CONTI-STREK"
+  },
+  {
+    "originalId": 568,
+    "name": "CONTI-DEXAT"
+  },
+  {
+    "originalId": 569,
+    "name": "CONTI-VITYL"
+  },
+  {
+    "originalId": 570,
+    "name": "CONTI-INTAS"
+  },
+  {
+    "originalId": 571,
+    "name": "CONTI-INTUL"
+  },
+  {
+    "originalId": 572,
+    "name": "Rotoz",
+    "facts": {
+      "creatureLevel": 50
+    }
+  },
+  {
+    "originalId": 573,
+    "name": "Dart Helmet"
+  },
+  {
+    "originalId": 574,
+    "name": "Laser Sword"
+  },
+  {
+    "originalId": 575,
+    "name": "Laser Sword"
+  },
+  {
+    "originalId": 576,
+    "name": "Laser Sword"
+  },
+  {
+    "originalId": 577,
+    "name": "Laser Sword"
+  },
+  {
+    "originalId": 578,
+    "name": "Sewing  machine"
+  },
+  {
+    "originalId": 579,
+    "name": "Thread"
+  },
+  {
+    "originalId": 580,
+    "name": "Cloth"
+  },
+  {
+    "originalId": 581,
+    "name": "Leather Armour"
+  },
+  {
+    "originalId": 582,
+    "name": "Leather Pants"
+  },
+  {
+    "originalId": 583,
+    "name": "Leather Boots"
+  },
+  {
+    "originalId": 584,
+    "name": "Leather Cape"
+  },
+  {
+    "originalId": 585,
+    "name": "Leather Cap"
+  },
+  {
+    "originalId": 586,
+    "name": "Pattern"
+  },
+  {
+    "originalId": 587,
+    "name": "Pattern"
+  },
+  {
+    "originalId": 588,
+    "name": "Pattern"
+  },
+  {
+    "originalId": 589,
+    "name": "Pattern"
+  },
+  {
+    "originalId": 590,
+    "name": "Pattern"
+  },
+  {
+    "originalId": 591,
+    "name": "Zartite THelmet"
+  },
+  {
+    "originalId": 592,
+    "name": "Haftite THelmet"
+  },
+  {
+    "originalId": 593,
+    "name": "Rhenite THelmet"
+  },
+  {
+    "originalId": 594,
+    "name": "Thrilium THelme"
+  },
+  {
+    "originalId": 595,
+    "name": "Immortaler"
+  },
+  {
+    "originalId": 596,
+    "name": "Zartite Armour"
+  },
+  {
+    "originalId": 597,
+    "name": "Haftite Armour"
+  },
+  {
+    "originalId": 598,
+    "name": "Rhenite Armour"
+  },
+  {
+    "originalId": 599,
+    "name": "Zartite Leg."
+  },
+  {
+    "originalId": 600,
+    "name": "Haftite Leg."
+  },
+  {
+    "originalId": 601,
+    "name": "Rhenite Leg."
+  },
+  {
+    "originalId": 602,
+    "name": "CD-ROM"
+  },
+  {
+    "originalId": 603,
+    "name": "CD-ROM"
+  },
+  {
+    "originalId": 604,
+    "name": "CD-ROM"
+  },
+  {
+    "originalId": 605,
+    "name": "UFO"
+  },
+  {
+    "originalId": 606,
+    "name": "Syringe"
+  },
+  {
+    "originalId": 607,
+    "name": "Test Tube"
+  },
+  {
+    "originalId": 608,
+    "name": "Toxin Type A"
+  },
+  {
+    "originalId": 609,
+    "name": "Toxin Type B"
+  },
+  {
+    "originalId": 610,
+    "name": "Toxin Type C"
+  },
+  {
+    "originalId": 611,
+    "name": "Toxin Type D"
+  },
+  {
+    "originalId": 612,
+    "name": "Dead scorpion"
+  },
+  {
+    "originalId": 613,
+    "name": "Bucket"
+  },
+  {
+    "originalId": 614,
+    "name": "PitchKnife"
+  },
+  {
+    "originalId": 615,
+    "name": "Resin"
+  },
+  {
+    "originalId": 616,
+    "name": "Web"
+  },
+  {
+    "originalId": 617,
+    "name": "G_Web"
+  },
+  {
+    "originalId": 618,
+    "name": "Raw resin"
+  },
+  {
+    "originalId": 619,
+    "name": "Gift"
+  },
+  {
+    "originalId": 620,
+    "name": "Hat"
+  },
+  {
+    "originalId": 621,
+    "name": "Hat"
+  },
+  {
+    "originalId": 622,
+    "name": "Hat"
+  },
+  {
+    "originalId": 623,
+    "name": "Mug  of juice"
+  },
+  {
+    "originalId": 624,
+    "name": "Flask"
+  },
+  {
+    "originalId": 625,
+    "name": "Flask of arans"
+  },
+  {
+    "originalId": 626,
+    "name": "Flask of letnos"
+  },
+  {
+    "originalId": 627,
+    "name": "Flask of force"
+  },
+  {
+    "originalId": 628,
+    "name": "Poster"
+  },
+  {
+    "originalId": 629,
+    "name": "Pank"
+  },
+  {
+    "originalId": 630,
+    "name": "Hairdresser"
+  },
+  {
+    "originalId": 631,
+    "name": "Mayor"
+  },
+  {
+    "originalId": 632,
+    "name": "Black Shirt"
+  },
+  {
+    "originalId": 633,
+    "name": "Red Shirt"
+  },
+  {
+    "originalId": 634,
+    "name": "Green Shirt"
+  },
+  {
+    "originalId": 635,
+    "name": "Blue Shirt"
+  },
+  {
+    "originalId": 636,
+    "name": "Sea wave Shirt"
+  },
+  {
+    "originalId": 637,
+    "name": "Magenta Shirt"
+  },
+  {
+    "originalId": 638,
+    "name": "Yellow Shirt"
+  },
+  {
+    "originalId": 639,
+    "name": "White Shirt"
+  },
+  {
+    "originalId": 640,
+    "name": "Black Pants"
+  },
+  {
+    "originalId": 641,
+    "name": "Red Pants"
+  },
+  {
+    "originalId": 642,
+    "name": "Green Pants"
+  },
+  {
+    "originalId": 643,
+    "name": "Blue Pants"
+  },
+  {
+    "originalId": 644,
+    "name": "Sea wave Pants"
+  },
+  {
+    "originalId": 645,
+    "name": "Magenta Pants"
+  },
+  {
+    "originalId": 646,
+    "name": "Yellow Pants"
+  },
+  {
+    "originalId": 647,
+    "name": "White Pants"
+  },
+  {
+    "originalId": 648,
+    "name": "Black Dye"
+  },
+  {
+    "originalId": 649,
+    "name": "Red Dye"
+  },
+  {
+    "originalId": 650,
+    "name": "Green Dye"
+  },
+  {
+    "originalId": 651,
+    "name": "Blue Dye"
+  },
+  {
+    "originalId": 652,
+    "name": "Sea wave Dye"
+  },
+  {
+    "originalId": 653,
+    "name": "Magenta Dye"
+  },
+  {
+    "originalId": 654,
+    "name": "Yellow Dye"
+  },
+  {
+    "originalId": 655,
+    "name": "White Dye"
+  },
+  {
+    "originalId": 656,
+    "name": "Santa Cape"
+  },
+  {
+    "originalId": 657,
+    "name": "Rotoz",
+    "facts": {
+      "creatureLevel": 70
+    }
+  },
+  {
+    "originalId": 658,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 659,
+    "name": "Zartul"
+  },
+  {
+    "originalId": 660,
+    "name": "Santa Staff"
+  },
+  {
+    "originalId": 661,
+    "name": "Helmet AR-1"
+  },
+  {
+    "originalId": 662,
+    "name": "Crown"
+  },
+  {
+    "originalId": 663,
+    "name": "Crown"
+  },
+  {
+    "originalId": 664,
+    "name": "Crown"
+  },
+  {
+    "originalId": 665,
+    "name": "Crown"
+  },
+  {
+    "originalId": 666,
+    "name": "Crown"
+  },
+  {
+    "originalId": 667,
+    "name": "Crown"
+  },
+  {
+    "originalId": 668,
+    "name": "Crown"
+  },
+  {
+    "originalId": 669,
+    "name": "Crown"
+  },
+  {
+    "originalId": 670,
+    "name": "Lonter",
+    "facts": {
+      "creatureLevel": 90
+    }
+  },
+  {
+    "originalId": 671,
+    "name": "Dead Lonter"
+  },
+  {
+    "originalId": 672,
+    "name": "Officer cap"
+  },
+  {
+    "originalId": 673,
+    "name": "Tree"
+  },
+  {
+    "originalId": 674,
+    "name": "Tree"
+  },
+  {
+    "originalId": 675,
+    "name": "Tree"
+  },
+  {
+    "originalId": 676,
+    "name": "Tree"
+  },
+  {
+    "originalId": 677,
+    "name": "Thrilium Armour"
+  },
+  {
+    "originalId": 678,
+    "name": "Thrilium Leg."
+  },
+  {
+    "originalId": 679,
+    "name": "Fire Rotoz",
+    "facts": {
+      "creatureLevel": 90
+    }
+  },
+  {
+    "originalId": 680,
+    "name": "Zartul Titan",
+    "facts": {
+      "creatureLevel": 80
+    }
+  },
+  {
+    "originalId": 681,
+    "name": "Spider egg"
+  },
+  {
+    "originalId": 682,
+    "name": "G_spider_egg"
+  },
+  {
+    "originalId": 683,
+    "name": "Spider Queen",
+    "facts": {
+      "creatureLevel": 70
+    }
+  },
+  {
+    "originalId": 684,
+    "name": "Mr.Clumsy"
+  },
+  {
+    "originalId": 685,
+    "name": "Raw Pie"
+  },
+  {
+    "originalId": 686,
+    "name": "Pie"
+  },
+  {
+    "originalId": 687,
+    "name": "Burned Pie"
+  },
+  {
+    "originalId": 688,
+    "name": "Lana Robinson"
+  },
+  {
+    "originalId": 689,
+    "name": "Spoiled boots"
+  },
+  {
+    "originalId": 690,
+    "name": "Gan Reyes"
+  },
+  {
+    "originalId": 691,
+    "name": "Gift"
+  },
+  {
+    "originalId": 692,
+    "name": "Glasses"
+  },
+  {
+    "originalId": 693,
+    "name": "Glasses"
+  },
+  {
+    "originalId": 694,
+    "name": "Glasses"
+  },
+  {
+    "originalId": 695,
+    "name": "Bonnie Barrow"
+  },
+  {
+    "originalId": 696,
+    "name": "Bowstring"
+  },
+  {
+    "originalId": 697,
+    "name": "Seif tree"
+  },
+  {
+    "originalId": 698,
+    "name": "Twig"
+  },
+  {
+    "originalId": 699,
+    "name": "Crossbow basis"
+  },
+  {
+    "originalId": 700,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 701,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 702,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 703,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 704,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 705,
+    "name": "Battery Corps"
+  },
+  {
+    "originalId": 706,
+    "name": "Battery 50kw"
+  },
+  {
+    "originalId": 707,
+    "name": "Battery 200kw"
+  },
+  {
+    "originalId": 708,
+    "name": "Polymer"
+  },
+  {
+    "originalId": 709,
+    "name": "Polygel"
+  },
+  {
+    "originalId": 710,
+    "name": "Glass Bar"
+  },
+  {
+    "originalId": 711,
+    "name": "Heap Saltpetre"
+  },
+  {
+    "originalId": 712,
+    "name": "Saltpetre"
+  },
+  {
+    "originalId": 713,
+    "name": "*Saltpetre"
+  },
+  {
+    "originalId": 714,
+    "name": "Gunpowder"
+  },
+  {
+    "originalId": 715,
+    "name": "Mould"
+  },
+  {
+    "originalId": 716,
+    "name": "Bullets"
+  },
+  {
+    "originalId": 717,
+    "name": "Glass Bar"
+  },
+  {
+    "originalId": 718,
+    "name": "Lead Castet"
+  },
+  {
+    "originalId": 719,
+    "name": "Bronze Castet"
+  },
+  {
+    "originalId": 720,
+    "name": "Iron Castet"
+  },
+  {
+    "originalId": 721,
+    "name": "Titanium Castet"
+  },
+  {
+    "originalId": 722,
+    "name": "Froanite Castet"
+  },
+  {
+    "originalId": 723,
+    "name": "Dianite Castet"
+  },
+  {
+    "originalId": 724,
+    "name": "Rhenite Castet"
+  },
+  {
+    "originalId": 725,
+    "name": "CD-ROM"
+  },
+  {
+    "originalId": 726,
+    "name": "Picklock"
+  },
+  {
+    "originalId": 727,
+    "name": "Codehacker"
+  },
+  {
+    "originalId": 728,
+    "name": "Locked Safe"
+  },
+  {
+    "originalId": 729,
+    "name": "Opened Safe"
+  },
+  {
+    "originalId": 730,
+    "name": "Locked G.Safe"
+  },
+  {
+    "originalId": 731,
+    "name": "Opened G.Safe"
+  },
+  {
+    "originalId": 732,
+    "name": "Fg42"
+  },
+  {
+    "originalId": 733,
+    "name": "Sten"
+  },
+  {
+    "originalId": 734,
+    "name": "Tesla"
+  },
+  {
+    "originalId": 735,
+    "name": "Venom"
+  },
+  {
+    "originalId": 736,
+    "name": "Surgeon"
+  },
+  {
+    "originalId": 737,
+    "name": "Hat"
+  },
+  {
+    "originalId": 738,
+    "name": "Security guard"
+  },
+  {
+    "originalId": 739,
+    "name": "Mask of a deer"
+  },
+  {
+    "originalId": 740,
+    "name": "Wall"
+  },
+  {
+    "originalId": 741,
+    "name": "Wall"
+  },
+  {
+    "originalId": 742,
+    "name": "Wall"
+  },
+  {
+    "originalId": 743,
+    "name": "Wall"
+  },
+  {
+    "originalId": 744,
+    "name": "Wall"
+  },
+  {
+    "originalId": 745,
+    "name": "Wall"
+  },
+  {
+    "originalId": 746,
+    "name": "Wall"
+  },
+  {
+    "originalId": 747,
+    "name": "Wall"
+  },
+  {
+    "originalId": 748,
+    "name": "Wall"
+  },
+  {
+    "originalId": 749,
+    "name": "Wall"
+  },
+  {
+    "originalId": 750,
+    "name": "Wall"
+  },
+  {
+    "originalId": 751,
+    "name": "Wall"
+  },
+  {
+    "originalId": 752,
+    "name": "Wall"
+  },
+  {
+    "originalId": 753,
+    "name": "Wall"
+  },
+  {
+    "originalId": 754,
+    "name": "Wall"
+  },
+  {
+    "originalId": 755,
+    "name": "Wall"
+  },
+  {
+    "originalId": 756,
+    "name": "Wall"
+  },
+  {
+    "originalId": 757,
+    "name": "Wall"
+  },
+  {
+    "originalId": 758,
+    "name": "Wall"
+  },
+  {
+    "originalId": 759,
+    "name": "Wall"
+  },
+  {
+    "originalId": 760,
+    "name": "Wall"
+  },
+  {
+    "originalId": 761,
+    "name": "Wall"
+  },
+  {
+    "originalId": 762,
+    "name": "Wall"
+  },
+  {
+    "originalId": 763,
+    "name": "Wall"
+  },
+  {
+    "originalId": 764,
+    "name": "Wall"
+  },
+  {
+    "originalId": 765,
+    "name": "Wall"
+  },
+  {
+    "originalId": 766,
+    "name": "Wall"
+  },
+  {
+    "originalId": 767,
+    "name": "Wall"
+  },
+  {
+    "originalId": 768,
+    "name": "Wall"
+  },
+  {
+    "originalId": 769,
+    "name": "Wall"
+  },
+  {
+    "originalId": 770,
+    "name": "Wall"
+  },
+  {
+    "originalId": 771,
+    "name": "Wall"
+  },
+  {
+    "originalId": 772,
+    "name": "Bridge"
+  },
+  {
+    "originalId": 773,
+    "name": "Roof"
+  },
+  {
+    "originalId": 774,
+    "name": "Certificate"
+  },
+  {
+    "originalId": 775,
+    "name": "Dorlick"
+  },
+  {
+    "originalId": 776,
+    "name": "FroanitePickaxe"
+  },
+  {
+    "originalId": 777,
+    "name": "Kerchief"
+  },
+  {
+    "originalId": 778,
+    "name": "E.El.Harpoon"
+  },
+  {
+    "originalId": 780,
+    "name": "Poster"
+  },
+  {
+    "originalId": 781,
+    "name": "Morlick"
+  },
+  {
+    "originalId": 782,
+    "name": "Cape"
+  },
+  {
+    "originalId": 783,
+    "name": "Cape"
+  },
+  {
+    "originalId": 784,
+    "name": "Cape"
+  },
+  {
+    "originalId": 785,
+    "name": "Cape"
+  },
+  {
+    "originalId": 786,
+    "name": "Cape"
+  },
+  {
+    "originalId": 787,
+    "name": "Cape"
+  },
+  {
+    "originalId": 788,
+    "name": "Cape"
+  },
+  {
+    "originalId": 789,
+    "name": "Cape"
+  },
+  {
+    "originalId": 790,
+    "name": "Big flask"
+  },
+  {
+    "originalId": 791,
+    "name": "Big flask"
+  },
+  {
+    "originalId": 792,
+    "name": "Big flask"
+  },
+  {
+    "originalId": 793,
+    "name": "Miner lamp"
+  },
+  {
+    "originalId": 794,
+    "name": "Replicator"
+  },
+  {
+    "originalId": 795,
+    "name": "Commando",
+    "facts": {
+      "creatureLevel": 50
+    }
+  },
+  {
+    "originalId": 796,
+    "name": "S. Commando",
+    "facts": {
+      "creatureLevel": 70
+    }
+  },
+  {
+    "originalId": 797,
+    "name": "H. warrior",
+    "facts": {
+      "creatureLevel": 60
+    }
+  },
+  {
+    "originalId": 798,
+    "name": "Cruel warrior",
+    "facts": {
+      "creatureLevel": 80
+    }
+  },
+  {
+    "originalId": 799,
+    "name": "Seth bodyguard",
+    "facts": {
+      "creatureLevel": 100
+    }
+  },
+  {
+    "originalId": 800,
+    "name": "Seth",
+    "facts": {
+      "creatureLevel": 120
+    }
+  },
+  {
+    "originalId": 801,
+    "name": "Clan guard"
+  },
+  {
+    "originalId": 802,
+    "name": "Big flask"
+  },
+  {
+    "originalId": 803,
+    "name": "Raw Hilodius"
+  },
+  {
+    "originalId": 804,
+    "name": "Hilodius"
+  },
+  {
+    "originalId": 805,
+    "name": "Burned Hilodius"
+  },
+  {
+    "originalId": 806,
+    "name": "Ruby spray"
+  },
+  {
+    "originalId": 807,
+    "name": "RHaftite Helmet"
+  },
+  {
+    "originalId": 808,
+    "name": "RHaftite Leg."
+  },
+  {
+    "originalId": 809,
+    "name": "RHaftite Armour"
+  },
+  {
+    "originalId": 810,
+    "name": "RRhenite THelm."
+  },
+  {
+    "originalId": 811,
+    "name": "RRhenite Leg."
+  },
+  {
+    "originalId": 812,
+    "name": "RRhenite Armour"
+  },
+  {
+    "originalId": 813,
+    "name": "ImmortalerXP"
+  },
+  {
+    "originalId": 814,
+    "name": "Laser Axe"
+  },
+  {
+    "originalId": 815,
+    "name": "Laser Axe"
+  },
+  {
+    "originalId": 816,
+    "name": "Laser Axe"
+  },
+  {
+    "originalId": 817,
+    "name": "Laser Axe"
+  },
+  {
+    "originalId": 818,
+    "name": "Laser Pole"
+  },
+  {
+    "originalId": 819,
+    "name": "Laser Pole"
+  },
+  {
+    "originalId": 820,
+    "name": "Laser Pole"
+  },
+  {
+    "originalId": 821,
+    "name": "Laser Pole"
+  },
+  {
+    "originalId": 822,
+    "name": "Laser Dagger"
+  },
+  {
+    "originalId": 823,
+    "name": "Laser Dagger"
+  },
+  {
+    "originalId": 824,
+    "name": "Laser Dagger"
+  },
+  {
+    "originalId": 825,
+    "name": "Laser Dagger"
+  },
+  {
+    "originalId": 826,
+    "name": "Laser Shield"
+  },
+  {
+    "originalId": 827,
+    "name": "Laser Shield"
+  },
+  {
+    "originalId": 828,
+    "name": "Laser Shield"
+  },
+  {
+    "originalId": 829,
+    "name": "Laser Shield"
+  },
+  {
+    "originalId": 830,
+    "name": "Laser Castet"
+  },
+  {
+    "originalId": 831,
+    "name": "Laser Castet"
+  },
+  {
+    "originalId": 832,
+    "name": "Laser Castet"
+  },
+  {
+    "originalId": 833,
+    "name": "Laser Castet"
+  },
+  {
+    "originalId": 834,
+    "name": "Gate"
+  },
+  {
+    "originalId": 835,
+    "name": "Instructor"
+  },
+  {
+    "originalId": 836,
+    "name": "iScan",
+    "facts": {
+      "intelligence": 10
+    }
+  },
+  {
+    "originalId": 837,
+    "name": "Flask of arans"
+  },
+  {
+    "originalId": 838,
+    "name": "Flask of arans"
+  },
+  {
+    "originalId": 839,
+    "name": "Flask of letnos"
+  },
+  {
+    "originalId": 840,
+    "name": "Flask of letnos"
+  },
+  {
+    "originalId": 841,
+    "name": "Flask of force"
+  },
+  {
+    "originalId": 842,
+    "name": "Flask of force"
+  },
+  {
+    "originalId": 843,
+    "name": "BigEncyclopedia",
+    "facts": {
+      "bookExperience": 250
+    }
+  },
+  {
+    "originalId": 844,
+    "name": "Mask"
+  },
+  {
+    "originalId": 845,
+    "name": "Santa Robe"
+  },
+  {
+    "originalId": 846,
+    "name": "Santa Pants"
+  },
+  {
+    "originalId": 847,
+    "name": "Raw Awlusk"
+  },
+  {
+    "originalId": 848,
+    "name": "Awlusk"
+  },
+  {
+    "originalId": 849,
+    "name": "Burned Awlusk"
+  },
+  {
+    "originalId": 850,
+    "name": "Thrilium Powder"
+  },
+  {
+    "originalId": 851,
+    "name": "Thrilium Bar"
+  },
+  {
+    "originalId": 852,
+    "name": "Jonny"
+  },
+  {
+    "originalId": 853,
+    "name": "Rotoz hide"
+  },
+  {
+    "originalId": 854,
+    "name": "Rotoz Armour"
+  },
+  {
+    "originalId": 855,
+    "name": "Rotoz Pants"
+  },
+  {
+    "originalId": 856,
+    "name": "Rotoz Boots"
+  },
+  {
+    "originalId": 857,
+    "name": "Rotoz Cape"
+  },
+  {
+    "originalId": 858,
+    "name": "Rotos Cap"
+  },
+  {
+    "originalId": 859,
+    "name": "Rotoz hide"
+  },
+  {
+    "originalId": 860,
+    "name": "FRotoz Armour"
+  },
+  {
+    "originalId": 861,
+    "name": "FRotoz Pants"
+  },
+  {
+    "originalId": 862,
+    "name": "FRotoz Boots"
+  },
+  {
+    "originalId": 863,
+    "name": "FRotoz Cape"
+  },
+  {
+    "originalId": 864,
+    "name": "FRotos Cap"
+  },
+  {
+    "originalId": 865,
+    "name": "Sapphire core"
+  },
+  {
+    "originalId": 866,
+    "name": "Emerald core"
+  },
+  {
+    "originalId": 867,
+    "name": "Energo corps"
+  },
+  {
+    "originalId": 868,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 869,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 870,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 871,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 872,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 873,
+    "name": "Flesh disk"
+  },
+  {
+    "originalId": 874,
+    "name": "Pirate Hat"
+  },
+  {
+    "originalId": 875,
+    "name": "Ded Moroz Cape"
+  },
+  {
+    "originalId": 876,
+    "name": "iExpo"
+  },
+  {
+    "originalId": 877,
+    "name": "Expo"
+  },
+  {
+    "originalId": 878,
+    "name": "Pirate Cape"
+  },
+  {
+    "originalId": 879,
+    "name": "Cap"
+  },
+  {
+    "originalId": 880,
+    "name": "BeerCap"
+  },
+  {
+    "originalId": 881,
+    "name": "MinerBag"
+  },
+  {
+    "originalId": 882,
+    "name": "Sombrero"
+  },
+  {
+    "originalId": 883,
+    "name": "Phaser"
+  },
+  {
+    "originalId": 884,
+    "name": "Crossbow"
+  },
+  {
+    "originalId": 885,
+    "name": "Jet Pack"
+  },
+  {
+    "originalId": 886,
+    "name": "iMan Helmet"
+  },
+  {
+    "originalId": 887,
+    "name": "OrbCap"
+  },
+  {
+    "originalId": 888,
+    "name": "Cap 2014"
+  }
+]

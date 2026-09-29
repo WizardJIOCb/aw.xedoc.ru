@@ -1,0 +1,41 @@
+[Unit]
+Description=AW XEDOC multiplayer world
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=aw-game
+Group=aw-game
+WorkingDirectory=/var/www/aw.xedoc.ru/current
+EnvironmentFile=/var/www/aw.xedoc.ru/current/release.env
+# The release installer replaces this token with the verified system Node.js path.
+ExecStart=@NODE_BINARY@ /var/www/aw.xedoc.ru/current/node_modules/tsx/dist/cli.mjs /var/www/aw.xedoc.ru/current/server/index.ts
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+KillSignal=SIGTERM
+KillMode=control-group
+UMask=0077
+StateDirectory=aw-xedoc
+StateDirectoryMode=0750
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/aw-xedoc
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target
